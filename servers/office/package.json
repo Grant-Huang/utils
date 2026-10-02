@@ -1,0 +1,27 @@
+{
+  "name": "office-mcp",
+  "version": "0.2.0",
+  "description": "MCP server (stdio + Streamable HTTP) + REST bridge + demo front for parameterised Office doc generation.",
+  "type": "module",
+  "main": "src/http/bridge.js",
+  "bin": {
+    "office-mcp": "src/mcp/server.js"
+  },
+  "scripts": {
+    "start": "node src/http/bridge.js",
+    "mcp": "node src/mcp/server.js",
+    "demo": "node src/http/bridge.js",
+    "test": "node --test test/e2e.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.31.0",
+    "docx": "^9.8.1",
+    "pptxgenjs": "^4.0.1",
+    "xlsx-js-style": "^1.2.0",
+    "zod": "^4.6.5"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

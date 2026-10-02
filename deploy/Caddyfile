@@ -1,0 +1,13 @@
+# 反向代理：一个域名下按路径前缀路由到各 MCP server，并自动签发 HTTPS（域名需解析到本机）。
+# handle_path 会去掉前缀：https://host/office/mcp → office:8911/mcp
+{$SITE_ADDRESS:localhost} {
+	handle_path /office/* {
+		reverse_proxy office:8911
+	}
+	handle_path /webtool/* {
+		reverse_proxy webtool:8912
+	}
+	handle {
+		respond "MCP platform: /office/mcp  /webtool/mcp" 200
+	}
+}

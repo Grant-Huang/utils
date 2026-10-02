@@ -1,0 +1,72 @@
+[
+  {
+    "tool": "opensearch",
+    "case_id": "Q1",
+    "ok": false,
+    "error": "connect: ConnectionError: ConnectionError(<urllib3.connection.HTTPConnection object at 0x106e3f1f0>: Faile",
+    "latency_ms": 126.396667,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "opensearch",
+    "case_id": "Q2",
+    "ok": false,
+    "error": "connect: ConnectionError: ConnectionError(<urllib3.connection.HTTPConnection object at 0x106e3f0a0>: Faile",
+    "latency_ms": 0.7574160000000107,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "opensearch",
+    "case_id": "Q3",
+    "ok": false,
+    "error": "connect: ConnectionError: ConnectionError(<urllib3.connection.HTTPConnection object at 0x106e4f7c0>: Faile",
+    "latency_ms": 0.6681249999999916,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "opensearch",
+    "case_id": "Q4",
+    "ok": false,
+    "error": "connect: ConnectionError: ConnectionError(<urllib3.connection.HTTPConnection object at 0x106e54c10>: Faile",
+    "latency_ms": 0.700292000000019,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "opensearch",
+    "case_id": "Q5",
+    "ok": false,
+    "error": "connect: ConnectionError: ConnectionError(<urllib3.connection.HTTPConnection object at 0x106e63040>: Faile",
+    "latency_ms": 0.8043749999999961,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  }
+]

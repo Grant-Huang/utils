@@ -1,0 +1,52 @@
+{
+  "meta": { "creator": "office-mcp demo", "title": "2026 开源 ASR 横评" },
+  "cover": { "title": "2026 年开源语音识别（ASR）方案横评", "subtitle": "内部参考 · v1.0 · Hermes 评测组" },
+  "chapters": [
+    {
+      "title": "主流开源 ASR 模型横向对比",
+      "level": 1,
+      "blocks": [
+        {
+          "type": "table",
+          "headers": ["模型", "厂商", "参数量", "HF 下载量", "发布日期", "中文 WER"],
+          "rows": [
+            ["Qwen3-ASR-1.7B", "Alibaba Qwen", "1.7B", "1,631,873", "2026-01-30", "4.21"],
+            ["nemotron-3.5-asr-streaming", "NVIDIA", "0.6B", "1,191,490", "2026-09-10", "6.78"],
+            ["VibeVoice-ASR", "Microsoft", "7B", "727,707", "2026-01-27", "4.95"]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ASR 推理端到端流水线",
+      "level": 1,
+      "blocks": [
+        {
+          "type": "flowchart",
+          "nodes": [
+            { "label": "音频输入\nPCM 16kHz", "color": "4472C4" },
+            { "label": "VAD 分段", "color": "ED7D31" },
+            { "label": "特征提取", "color": "70AD47" },
+            { "label": "推理引擎", "color": "7030A0" },
+            { "label": "后处理", "color": "C00000" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "工程决策树",
+      "level": 1,
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "是否需要流式字幕？ → Nemotron-Streaming 0.6B + TensorRT-LLM",
+            "是否纯端侧（iOS/macOS/Android）？ → WhisperKit CoreML 或 Qwen3-ASR GGUF",
+            "是否有 A100/H100？否 → Faster-Whisper int8 服务化",
+            "多语种混合且含中文？ → Qwen3-ASR-1.7B + vLLM-Omni"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "meta": { "creator": "office-mcp demo", "title": "2026 开源 ASR 横评" },
+  "cover": {
+    "title": "2026 年开源语音识别（ASR）方案横评报告",
+    "subtitle": "内部参考 · v1.0",
+    "fields": [
+      ["评测组", "Hermes 评测组"],
+      ["发布日期", "2026-10-02"],
+      ["版本", "v1.0"]
+    ],
+    "abstract": "本报告以 2026 年 10 月时点的开源语音识别（ASR）生态为研究对象，从模型层、部署层、典型场景三个视角对主流开源方案做横向评测。"
+  },
+  "toc": true,
+  "header": { "text": "2026 开源 ASR 横评 · 内部参考" },
+  "footer": { "text": "" },
+  "chapters": [
+    {
+      "title": "第一章 模型层横评",
+      "level": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "本章关注模型本身的静态属性与公开榜单表现。评测维度包括参数量、HuggingFace 下载量、发布日期、典型 WER、推理硬件门槛。" },
+        {
+          "type": "table",
+          "caption": "表 1 主流开源 ASR 模型横向对比（数据截至 2026-10-01）",
+          "headerFill": "4472C4",
+          "widths": [1200, 1000, 700, 1000, 900, 800, 700, 800, 700],
+          "rows": [
+            ["模型", "厂商/团队", "参数量", "HF 下载量", "发布日期", "许可证", "典型 RTF", "中文 WER", "部署难度"],
+            ["Qwen3-ASR-1.7B", "Alibaba Qwen", "1.7B", "1,631,873", "2026-01-30", "Apache-2.0", "0.08", "4.21", "中"],
+            ["nemotron-3.5-asr-streaming-0.6b", "NVIDIA", "0.6B", "1,191,490", "2026-09-10", "CC-BY-4.0", "0.05", "6.78", "中"],
+            ["VibeVoice-ASR", "Microsoft", "7B", "727,707", "2026-01-27", "MIT", "0.12", "4.95", "中高"],
+            ["whisper-large-v3-turbo", "OpenAI", "0.8B", "6,371,960", "2024-10-04", "MIT", "0.06", "7.12", "低"]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "第二章 部署层横评",
+      "level": 1,
+      "blocks": [
+        {
+          "type": "table",
+          "caption": "表 2 五种部署形态对比",
+          "headerFill": "70AD47",
+          "widths": [2200, 1600, 1800, 1700, 1500],
+          "rows": [
+            ["部署形态", "P50 延迟(s)", "吞吐(RTF倒数×流)", "显存/内存", "单小时成本(USD)"],
+            ["端侧 (CoreML/GGUF)", "1.2", "0.6×", "2-3 GB RAM", "0.01"],
+            ["服务端 CPU (Faster-Whisper int8)", "2.5", "4.0×", "8 GB RAM", "0.04"],
+            ["服务端 GPU (A100 80G, vLLM)", "0.6", "18.0×", "24 GB VRAM", "0.12"]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "第三章 典型 ASR 推理流水线",
+      "level": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "一个完整的 ASR 推理流水线通常包含 5 个阶段：音频输入 → VAD 分段 → 特征提取 → 模型推理 → 后处理。" },
+        {
+          "type": "flowchart",
+          "caption": "图 1 ASR 推理端到端流水线",
+          "nodes": [
+            { "label": "音频输入\nPCM 16kHz", "color": "4472C4" },
+            { "label": "VAD 分段\nSilero-VAD", "color": "ED7D31" },
+            { "label": "特征提取\nLog-Mel", "color": "70AD47" },
+            { "label": "推理引擎\nTransformer", "color": "7030A0" },
+            { "label": "后处理\nITN/Punct", "color": "C00000" }
+          ]
+        },
+        {
+          "type": "code",
+          "title": "样例：faster-whisper（CPU 服务端）",
+          "borderColor": "5B9BD5",
+          "code": "from faster_whisper import WhisperModel\nmodel = WhisperModel(\"large-v3\", device=\"cpu\", compute_type=\"int8\")\nsegments, info = model.transcribe(\"audio.wav\", beam_size=5)\nfor seg in segments:\n    print(f\"[{seg.start:.2f}s -> {seg.end:.2f}s] {seg.text}\")"
+        }
+      ]
+    }
+  ],
+  "references": [
+    "[1] Radford A, et al. Robust Speech Recognition via Large-Scale Weak Supervision[C]//ICML. PMLR, 2023.",
+    "[2] Qwen Team. Qwen3-ASR Technical Report[R]. Alibaba Group, 2026.",
+    "[3] NVIDIA. Nemotron-3.5 Streaming ASR Model Card[R]. 2026."
+  ]
+}

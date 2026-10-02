@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>office-mcp demo</title>
+<style>
+  :root {
+    --bg: #0f172a; --panel: #1e293b; --ink: #e2e8f0; --muted: #94a3b8;
+    --accent: #38bdf8; --accent2: #818cf8; --ok: #4ade80; --err: #f87171;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 -apple-system, "SF Pro SC", "PingFang SC", sans-serif; }
+  header { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  header h1 { margin: 0; font-size: 18px; }
+  header h1 small { color: var(--muted); font-weight: 400; margin-left: 8px; font-size: 12px; }
+  .status { font-size: 12px; color: var(--muted); }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  main { display: grid; grid-template-columns: 360px 1fr; gap: 20px; padding: 20px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .panel h2 { margin: 0 0 12px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .row { margin-bottom: 14px; }
+  .row label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .row input, .row select { width: 100%; background: #0f172a; color: var(--ink); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; font: inherit; }
+  .row input[type=color] { height: 32px; padding: 2px; }
+  .row .hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .row .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  button { background: var(--accent); color: #0f172a; border: 0; border-radius: 4px; padding: 10px 16px; font-weight: 600; cursor: pointer; }
+  button:hover { background: #0ea5e9; }
+  button.secondary { background: var(--accent2); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  pre.json { background: #0f172a; border: 1px solid var(--border); border-radius: 6px; padding: 12px; max-height: 360px; overflow: auto; font-size: 12px; color: #cbd5e1; }
+  .preview { padding: 14px; background: #fafafa; color: #111; border-radius: 6px; min-height: 220px; }
+  .preview h3 { margin: 0 0 6px; font-size: 16px; }
+  .preview .meta { color: #6b7280; font-size: 12px; margin-bottom: 12px; }
+  .log { background: #0f172a; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font: 12px/1.6 ui-monospace, "SF Mono", monospace; color: #cbd5e1; max-height: 200px; overflow: auto; }
+  .log .ok { color: var(--ok); }
+  .log .err { color: var(--err); }
+  details summary { cursor: pointer; padding: 8px 0; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>office-mcp demo <small>Anthropic docx/pptx/xlsx skill · 参数可调 · MCP + HTTP</small></h1>
+  <div style="display:flex;gap:12px;align-items:center">
+    <input id="token" type="password" placeholder="Access token（服务启用鉴权时填写）" autocomplete="off" style="width:240px" />
+    <div id="health" class="status">checking…</div>
+  </div>
+</header>
+
+<main>
+  <aside class="panel">
+    <h2>生成参数</h2>
+
+    <div class="row">
+      <label>格式</label>
+      <select id="fmt">
+        <option value="docx">Word (.docx)</option>
+        <option value="pptx">PowerPoint (.pptx)</option>
+        <option value="xlsx">Excel (.xlsx)</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label>数据来源</label>
+      <select id="example">
+        <option value="asr">ASR 横评报告（默认）</option>
+        <option value="empty">空白模板</option>
+      </select>
+    </div>
+
+    <details open>
+      <summary>Skill 默认值（可覆盖）</summary>
+
+      <div class="row">
+        <div class="grid2">
+          <div>
+            <label>页边距 上 (DXA)</label>
+            <input id="marginTop" type="number" value="1440" min="360" max="3600" />
+          </div>
+          <div>
+            <label>页边距 左 (DXA)</label>
+            <input id="marginLeft" type="number" value="1797" min="360" max="3600" />
+          </div>
+        </div>
+        <div class="hint">1 inch = 1440 DXA · A4 默认 1440 / 1797</div>
+      </div>
+
+      <div class="row">
+        <label>正文字体颜色</label>
+        <input id="bodyColor" type="color" value="#000000" />
+      </div>
+
+      <div class="row">
+        <label>表格表头填充色</label>
+        <input id="tableHeaderFill" type="color" value="#4472C4" />
+      </div>
+
+      <div class="row">
+        <label>代码块字体大小 (pt)</label>
+        <input id="codeSize" type="number" value="9" min="6" max="16" />
+      </div>
+
+      <div class="row">
+        <label>代码块边框色</label>
+        <input id="codeBorder" type="color" value="#5B9BD5" />
+      </div>
+    </details>
+
+    <div class="btns">
+      <button id="gen">生成并下载</button>
+      <button id="json" class="secondary">查看 JSON</button>
+    </div>
+  </aside>
+
+  <section>
+    <div class="panel">
+      <h2>预览 / 输出</h2>
+      <div id="preview" class="preview">
+        <h3>2026 年开源语音识别（ASR）方案横评报告</h3>
+        <div class="meta">内部参考 · v1.0 · Hermes 评测组 · 2026-10-02</div>
+        <p>本报告以 2026 年 10 月时点的开源语音识别（ASR）生态为研究对象，从模型层、部署层、典型场景三个视角对主流开源方案做横向评测。</p>
+        <p><em>点击"生成并下载"，浏览器会弹出文件下载。</em></p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <h2>运行日志</h2>
+      <div id="log" class="log">等待操作…</div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <h2>Document JSON（实际发送给后端的载荷）</h2>
+      <pre id="jsonOut" class="json">{}</pre>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+[
+  {
+    "tool": "search:duckduckgo",
+    "case_id": "Q1",
+    "ok": true,
+    "error": "",
+    "latency_ms": 2583.015459,
+    "chars_md": 347,
+    "keyword_hits": 1,
+    "keyword_total": 1,
+    "n_results": 5,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {
+      "hits": [
+        {
+          "title": "AI News Of The Week (11th September, 2026) | Manaknight Digital",
+          "url": "https://manaknightdigital.com/blog/ai-news-week-of-september-11-2026",
+          "snippet": ""
+        },
+        {
+          "title": "AI Article: OpenAI Calls It AGI, Anthropic Answers, Google Retires ...",
+          "url": "https://lablab.ai/ai-articles/this-week-in-ai-2026-09-07",
+          "snippet": ""
+        },
+        {
+          "title": "AI Updates This Week: 7 Explosive AI Breakthroughs Shaking Up 2026",
+          "url": "https://imfounder.com/science-tech/ai/ai-updates-this-week-september-2026/",
+          "snippet": ""
+        }
+      ]
+    }
+  },
+  {
+    "tool": "search:duckduckgo",
+    "case_id": "Q2",
+    "ok": true,
+    "error": "",
+    "latency_ms": 1879.2252919999996,
+    "chars_md": 271,
+    "keyword_hits": 2,
+    "keyword_total": 2,
+    "n_results": 5,
+    "target_domain_hit": true,
+    "bytes_out": 0,
+    "raw": {
+      "hits": [
+        {
+          "title": "Coroutines and tasks \u2014 Python 3.14.8 documentation",
+          "url": "https://docs.python.org/3/library/asyncio-task.html",
+          "snippet": ""
+        },
+        {
+          "title": "High-level API Index \u2014 Python 3.14.8 documentation",
+          "url": "https://docs.python.org/3/library/asyncio-api-index.html",
+          "snippet": ""
+        },
+        {
+          "title": "Python Asyncio Task Cancellation - Stack Overflow",
+          "url": "https://stackoverflow.com/questions/56052748/python-asyncio-task-cancellation",
+          "snippet": ""
+        }
+      ]
+    }
+  },
+  {
+    "tool": "search:duckduckgo",
+    "case_id": "Q3",
+    "ok": false,
+    "error": "RuntimeError: DDG HTTP 202",
+    "latency_ms": 4192.786083999999,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:duckduckgo",
+    "case_id": "Q4",
+    "ok": false,
+    "error": "RuntimeError: DDG HTTP 202",
+    "latency_ms": 1225.7099999999994,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:duckduckgo",
+    "case_id": "Q5",
+    "ok": false,
+    "error": "RuntimeError: DDG HTTP 202",
+    "latency_ms": 1449.259249999999,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:searxng",
+    "case_id": "Q1",
+    "ok": false,
+    "error": "RuntimeError: SearXNG HTTP 502",
+    "latency_ms": 2895.1639999999993,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:searxng",
+    "case_id": "Q2",
+    "ok": false,
+    "error": "RuntimeError: SearXNG HTTP 502",
+    "latency_ms": 2833.856790999999,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:searxng",
+    "case_id": "Q3",
+    "ok": false,
+    "error": "RuntimeError: SearXNG HTTP 502",
+    "latency_ms": 3124.386458,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:searxng",
+    "case_id": "Q4",
+    "ok": false,
+    "error": "RuntimeError: SearXNG HTTP 502",
+    "latency_ms": 2568.3084160000008,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:searxng",
+    "case_id": "Q5",
+    "ok": false,
+    "error": "RuntimeError: SearXNG HTTP 502",
+    "latency_ms": 2436.127791999997,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:brave",
+    "case_id": "Q1",
+    "ok": false,
+    "error": "RuntimeError: BRAVE_API_KEY not set",
+    "latency_ms": 0.03462499999784541,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:brave",
+    "case_id": "Q2",
+    "ok": false,
+    "error": "RuntimeError: BRAVE_API_KEY not set",
+    "latency_ms": 0.008791000002617011,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:brave",
+    "case_id": "Q3",
+    "ok": false,
+    "error": "RuntimeError: BRAVE_API_KEY not set",
+    "latency_ms": 0.0064170000015906226,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:brave",
+    "case_id": "Q4",
+    "ok": false,
+    "error": "RuntimeError: BRAVE_API_KEY not set",
+    "latency_ms": 0.006041999998984693,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  },
+  {
+    "tool": "search:brave",
+    "case_id": "Q5",
+    "ok": false,
+    "error": "RuntimeError: BRAVE_API_KEY not set",
+    "latency_ms": 0.0055420000002470715,
+    "chars_md": 0,
+    "keyword_hits": 0,
+    "keyword_total": 0,
+    "n_results": 0,
+    "target_domain_hit": false,
+    "bytes_out": 0,
+    "raw": {}
+  }
+]

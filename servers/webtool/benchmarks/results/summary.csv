@@ -1,0 +1,9 @@
+json,label,license,role,deploy_ease,n,ok,ok_rate,lat_p50_ms,lat_p95_ms,chars_avg,chars_total,kw_hits,kw_total,kw_rate,host_diversity,top_dom_share,distinct_doms,kw_coverage,score
+plain_http,Plain HTTP (httpx + trafilatura),Apache-2.0 / BSD-2,baseline,0.95,7,6,0.857,2272,8292,26655,159931,12,12,1.000,0.000,0.000,0.0,0.000,0.931
+crawl4ai,Crawl4AI,Apache-2.0,default fetch,0.55,7,7,1.000,4058,14760,111563,780944,15,15,1.000,0.000,0.000,0.0,0.000,0.947
+playwright,Playwright,Apache-2.0,JS-render fallback,0.5,7,7,1.000,2848,5008,315213,2206493,15,15,1.000,0.000,0.000,0.0,0.000,0.950
+scrapy,Scrapy,BSD-3-Clause,batch crawl,0.7,7,7,1.000,1513,3706,22123,110613,10,13,0.769,0.000,0.000,0.0,0.000,0.912
+search_providers,SearchProvider (DDG/SearXNG/Brave),varies,search adapter,0.8,15,2,0.133,1879,3445,309,618,3,3,1.000,0.000,0.000,0.0,0.000,0.590
+opensearch,OpenSearch,Apache-2.0,self-hosted index,0.3,5,0,0.000,1,101,0,0,0,0,0.000,0.000,0.000,0.0,0.000,0.230
+pipeline,Pipeline: Search→Crawl4AI|Playwright,composite,end-to-end,0.55,5,5,1.000,24830,75991,69905,349527,9,9,1.000,0.000,0.000,0.0,0.000,0.793
+pipeline_n_k_factorial,Pipeline N×k factorial (8 variants),varies,N×k tradeoff,0.5,40,39,0.975,22439,67058,601209,23447169,385,468,0.823,0.984,0.254,5.9,1.000,0.750

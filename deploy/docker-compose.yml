@@ -1,0 +1,45 @@
+# 用法：cp .env.example .env && 编辑 .env && docker compose up -d --build
+# 只有 caddy 对外暴露端口；office / webtool 仅在内部网络可达。
+services:
+  office:
+    build: ../servers/office
+    restart: unless-stopped
+    environment:
+      MCP_AUTH_TOKENS: ${MCP_AUTH_TOKENS:?set MCP_AUTH_TOKENS in .env}
+      MCP_ALLOWED_HOSTS: ${PUBLIC_HOST:-localhost}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:-}
+      PUBLIC_BASE_URL: ${PUBLIC_URL:-https://localhost}/office
+      RATE_LIMIT_PER_MIN: ${RATE_LIMIT_PER_MIN:-60}
+    volumes:
+      - office-files:/tmp/office-mcp-files
+
+  webtool:
+    build:
+      context: ../servers/webtool
+      args:
+        EXTRAS: ${WEBTOOL_EXTRAS:-all}
+    restart: unless-stopped
+    shm_size: "1gb"          # chromium 需要较大的 /dev/shm
+    environment:
+      MCP_AUTH_TOKENS: ${MCP_AUTH_TOKENS:?set MCP_AUTH_TOKENS in .env}
+      MCP_ALLOWED_HOSTS: ${PUBLIC_HOST:-localhost}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:-}
+      WEBTOOL_PROXY: ${WEBTOOL_PROXY:-}
+      WEBTOOL_MAX_CONCURRENCY: ${WEBTOOL_MAX_CONCURRENCY:-2}
+      WEBTOOL_PRELOAD: ${WEBTOOL_PRELOAD:-0}
+      BRAVE_API_KEY: ${BRAVE_API_KEY:-}
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      SITE_ADDRESS: ${PUBLIC_HOST:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [office, webtool]
+
+volumes:
+  office-files:
+  caddy-data:

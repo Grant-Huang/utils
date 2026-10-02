@@ -1,0 +1,30 @@
+{
+  "meta": { "creator": "office-mcp demo", "title": "ASR 数据汇总" },
+  "sheets": [
+    {
+      "name": "模型对比",
+      "headerFill": "1F4E79",
+      "cols": [32, 16, 10, 14, 12, 12, 10, 10, 10],
+      "autofilter": "A1:I9",
+      "condFormat": { "column": 7, "low": 5, "high": 7 },
+      "data": [
+        ["模型", "厂商/团队", "参数量", "HF 下载量", "发布日期", "许可证", "典型 RTF", "中文 WER", "部署难度"],
+        ["Qwen3-ASR-1.7B", "Alibaba Qwen", "1.7B", 1631873, "2026-01-30", "Apache-2.0", 0.08, 4.21, "中"],
+        ["nemotron-3.5-asr-streaming-0.6b", "NVIDIA", "0.6B", 1191490, "2026-09-10", "CC-BY-4.0", 0.05, 6.78, "中"],
+        ["VibeVoice-ASR", "Microsoft", "7B", 727707, "2026-01-27", "MIT", 0.12, 4.95, "中高"],
+        ["whisper-large-v3-turbo", "OpenAI", "0.8B", 6371960, "2024-10-04", "MIT", 0.06, 7.12, "低"]
+      ]
+    },
+    {
+      "name": "部署形态",
+      "headerFill": "70AD47",
+      "cols": [36, 14, 22, 18, 18],
+      "data": [
+        ["部署形态", "P50 延迟(s)", "吞吐", "显存/内存", "单小时成本(USD)"],
+        ["端侧 (CoreML/GGUF)", 1.2, 0.6, "2-3 GB RAM", 0.01],
+        ["服务端 CPU (Faster-Whisper int8)", 2.5, 4.0, "8 GB RAM", 0.04],
+        ["服务端 GPU (A100)", 0.6, 18.0, "24 GB VRAM", 0.12]
+      ]
+    }
+  ]
+}
