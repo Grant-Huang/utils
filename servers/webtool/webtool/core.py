@@ -125,15 +125,16 @@ class Reranker:
 
 
 # ---------- fetch ----------
+# 抓取函数统一返回 (ok, markdown, final_url)：final_url 是跟随重定向后的最终地址，read_url 用它做抓取后校验。
 
-async def _fetch_crawl4ai(url: str) -> tuple[bool, str]:
+async def _fetch_crawl4ai(url: str) -> tuple[bool, str, str]:
     from crawl4ai import AsyncWebCrawler
     async with AsyncWebCrawler(verbose=False) as c:
         r = await c.arun(url=url)
-        return (r.success, r.markdown or "")
+        return (r.success, r.markdown or "", getattr(r, "redirected_url", None) or url)
 
 
-async def _fetch_playwright(url: str, timeout_ms: int = 20000) -> tuple[bool, str]:
+async def _fetch_playwright(url: str, timeout_ms: int = 20000) -> tuple[bool, str, str]:
     from playwright.async_api import async_playwright
     from markdownify import markdownify as md
     async with async_playwright() as p:
@@ -144,34 +145,50 @@ async def _fetch_playwright(url: str, timeout_ms: int = 20000) -> tuple[bool, st
             await page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
             await page.wait_for_timeout(800)
             html = await page.content()
+            final_url = page.url
         finally:
             await ctx.close()
             await browser.close()
-    return True, md(html, strip=["script", "style", "noscript", "nav", "footer", "aside"], heading_style="ATX")
+    return True, md(html, strip=["script", "style", "noscript", "nav", "footer", "aside"], heading_style="ATX"), final_url
 
 
-async def _fetch_plain(url: str) -> tuple[bool, str]:
+async def _fetch_plain(url: str, guard: bool = False) -> tuple[bool, str, str]:
     import httpx, trafilatura
     UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     proxy = DEFAULTS["proxy"]  # 可能为 None（直连）
     kw = dict(timeout=12, follow_redirects=True, proxy=proxy,
               headers={"User-Agent": UA, "Accept-Language": "en-US,en;q=0.9,zh;q=0.8"})
+    if guard:
+        # 每一跳（含重定向）发请求之前都校验，请求根本不会发往内网。
+        # 注意：check_url 会做同步 DNS 解析，放到线程里，避免阻塞事件循环。
+        from .urlguard import check_url
+
+        async def _check(request):
+            await asyncio.to_thread(check_url, str(request.url))
+        kw["event_hooks"] = {"request": [_check]}
     async with httpx.AsyncClient(**kw) as c:
         r = await c.get(url)
     if r.status_code != 200:
-        return False, ""
+        return False, "", str(r.url)
     md = trafilatura.extract(r.text, include_comments=False, include_tables=True, output_format="markdown") or ""
-    return bool(md), md
+    return bool(md), md, str(r.url)
 
 
-def fetch_page(url: str, engine: str) -> tuple[bool, str]:
+def fetch_page_ex(url: str, engine: str, guard: bool = False) -> tuple[bool, str, str]:
+    """返回 (ok, markdown, final_url)。guard=True 时 plain 引擎逐跳做 SSRF 校验。"""
     if engine == "crawl4ai":
         return asyncio.run(_fetch_crawl4ai(url))
     if engine == "playwright":
         return asyncio.run(_fetch_playwright(url))
     if engine == "plain":
-        return asyncio.run(_fetch_plain(url))
+        return asyncio.run(_fetch_plain(url, guard=guard))
     raise ValueError(f"unknown fetch engine: {engine}")
+
+
+def fetch_page(url: str, engine: str) -> tuple[bool, str]:
+    """兼容旧接口（run() 与 benchmark 使用）：只返回 (ok, markdown)。"""
+    ok, md, _ = fetch_page_ex(url, engine)
+    return ok, md
 
 
 # ---------- main pipeline ----------

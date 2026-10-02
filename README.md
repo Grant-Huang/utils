@@ -6,8 +6,9 @@
 utils/
 ├── servers/
 │   ├── office/     Node   生成 docx / pptx / xlsx（docx-js 等），含 demo 前端
-│   └── webtool/    Python 搜索 → rerank → 抓取，返回页面正文
-├── deploy/         docker-compose + Caddy（路径前缀路由、自动 HTTPS）
+│   ├── webtool/    Python 搜索 → rerank → 抓取；`read_url` 读单个网页（带 SSRF 防护）
+│   └── third-party/ 第三方 MCP 的镜像定义：markitdown、docling、excel、chart、duckdb、time、playwright
+├── deploy/         docker-compose + Caddy（路径前缀路由、自动 HTTPS）+ authcheck（第三方统一鉴权）
 └── docs/clients.md 各客户端如何接入
 ```
 
@@ -37,11 +38,20 @@ docker compose up -d --build
 
 只有 Caddy 对外暴露端口，`office` / `webtool` 仅内网可达。接入方式见 [docs/clients.md](docs/clients.md)。
 
+启用第三方 MCP（按需选 profile，**先读 [servers/third-party/README.md](servers/third-party/README.md) 里的风险说明**）：
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.third-party.yml --profile markitdown --profile excel --profile time up -d --build
+```
+
+office / webtool 自己校验 token；第三方 server 统一经 Caddy → authcheck 鉴权，上游收不到用户 token。
+
 ## 本地开发 / 测试
 
 ```bash
 cd servers/office  && npm install && npm test                       # 11 个端到端测试
-cd servers/webtool && pip install -e ".[dev]" && pytest             # 11 个 MCP 层测试（不联网）
+cd servers/webtool && pip install -e ".[dev]" && pytest             # 54 个测试：MCP 层 + SSRF 防护（不联网）
+cd deploy/authcheck && pytest                                       # 11 个测试：统一鉴权
 ```
 
 各 server 的详细说明见 `servers/office/README.md`、`servers/webtool/README.md`。

@@ -69,7 +69,21 @@ python -m webtool.server                          # stdio
 MCP_AUTH_TOKENS=$(openssl rand -hex 32) python -m webtool.server --transport http   # http://127.0.0.1:8912/mcp
 ```
 
-工具 `web_search(query, search_top, rerank_k, rerank, fetch, search_backend, max_chars_per_page)`：搜索 → rerank → 抓取，返回前 k 个页面的 markdown 正文和 URL。失败以 `isError` 返回。
+工具：
+- `web_search(query, search_top, rerank_k, rerank, fetch, search_backend, max_chars_per_page)`：搜索 → rerank → 抓取，返回前 k 个页面的 markdown 正文和 URL。
+- `read_url(url, fetch, max_chars)`：读取**一个**公开网页为 markdown（`web_search` 之后"读链接"那一步）。
+
+失败以 `isError` 返回。
+
+### `read_url` 的 SSRF 防护（`webtool/urlguard.py`）
+
+"让服务器替调用方抓任意 URL"是典型 SSRF 入口，所以先校验：只允许 http/https、不带 `user:pass@`、端口只放 80/443/8080/8443
+（`WEBTOOL_ALLOWED_PORTS` 可改）、主机名解析出的**每个** IP 都必须是公网地址（挡回环、内网、链路本地含云元数据 `169.254.169.254`、CGNAT、组播、保留地址，IPv4-mapped IPv6 会还原后判断）。
+`WEBTOOL_ALLOW_PRIVATE_URLS=1` 可关闭（仅限本机开发）。
+
+- `plain` 引擎：每一跳（含重定向）在**发请求之前**校验（用本地 HTTP 服务实测：回环地址被拦时服务端收到 0 个请求；重定向的第二跳同样被拦）。
+- `crawl4ai` / `playwright`：重定向由浏览器处理，只能抓取后校验最终 URL，落在内网就**丢弃内容**，不返回给调用方。
+- 局限：DNS rebinding 无法在应用层完全杜绝。可靠的兜底在网络层 —— 给容器配出站规则，禁止访问内网网段和元数据地址。
 HTTP 模式没有 token 会拒绝启动；`MCP_ALLOWED_HOSTS` / `MCP_ALLOWED_ORIGINS` / `HOST` / `PORT` 约定与 office 相同，另有 `WEBTOOL_MAX_CONCURRENCY`、`WEBTOOL_PRELOAD`。
 `GET /health` 公开。运行测试：`pip install -e ".[dev]" && pytest`。
 
@@ -83,8 +97,9 @@ servers/webtool/
 │   ├── server.py           # MCP server（stdio / Streamable HTTP）
 │   ├── core.py             # WebResult, Reranker, run()
 │   ├── search_provider.py  # 搜索后端适配层（DDG / SearXNG / Brave）
+│   ├── urlguard.py         # SSRF 防护（read_url 使用）
 │   └── render.py           # markdown 可视化
-├── tests/test_server.py    # MCP 层单元测试
+├── tests/                  # MCP 层与 URL 防护单测（不联网）
 └── benchmarks/             # N×k factorial benchmark 的脚本与结果（非运行时）
 ```
 

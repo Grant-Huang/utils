@@ -1,13 +1,78 @@
 # 反向代理：一个域名下按路径前缀路由到各 MCP server，并自动签发 HTTPS（域名需解析到本机）。
 # handle_path 会去掉前缀：https://host/office/mcp → office:8911/mcp
+#
+# office / webtool 自己校验 Bearer token；第三方 server 不带或不可靠地带鉴权，
+# 统一走 authcheck（forward_auth）：通过才转发，并且不把用户的 token 转给上游。
+# 各上游地址可用环境变量覆盖（本地集成测试时指向 127.0.0.1）。
+
+(guard) {
+	# {args[0]} 是 token 范围：default（MCP_AUTH_TOKENS）或 browser（MCP_BROWSER_TOKENS，专用通道）
+	forward_auth {$AUTHCHECK_UPSTREAM:authcheck:9000} {
+		uri /check?scope={args[0]}
+	}
+}
+
 {$SITE_ADDRESS:localhost} {
 	handle_path /office/* {
-		reverse_proxy office:8911
+		reverse_proxy {$OFFICE_UPSTREAM:office:8911}
 	}
 	handle_path /webtool/* {
-		reverse_proxy webtool:8912
+		reverse_proxy {$WEBTOOL_UPSTREAM:webtool:8912}
 	}
+
+	# ---- 第三方（servers/third-party）----
+	handle_path /markitdown/* {
+		import guard default
+		reverse_proxy {$MARKITDOWN_UPSTREAM:markitdown:3001} {
+			header_up -Authorization
+			flush_interval -1
+		}
+	}
+	handle_path /docling/* {
+		import guard default
+		reverse_proxy {$DOCLING_UPSTREAM:docling:8000} {
+			header_up -Authorization
+			flush_interval -1
+		}
+	}
+	handle_path /excel/* {
+		import guard default
+		reverse_proxy {$EXCEL_UPSTREAM:excel:8017} {
+			# excel-mcp-server 绑 0.0.0.0 必须带自己的 token：用内部 token 替换用户的
+			header_up Authorization "Bearer {$EXCEL_INTERNAL_TOKEN:unset}"
+			flush_interval -1
+		}
+	}
+	handle_path /chart/* {
+		import guard default
+		reverse_proxy {$CHART_UPSTREAM:chart:1122} {
+			header_up -Authorization
+			flush_interval -1
+		}
+	}
+	handle_path /duckdb/* {
+		import guard default
+		reverse_proxy {$DUCKDB_UPSTREAM:duckdb:8000} {
+			header_up -Authorization
+			flush_interval -1
+		}
+	}
+	handle_path /time/* {
+		import guard default
+		reverse_proxy {$TIME_UPSTREAM:time:8080} {
+			header_up -Authorization
+			flush_interval -1
+		}
+	}
+	handle_path /browser/* {
+		import guard browser
+		reverse_proxy {$BROWSER_UPSTREAM:playwright:8931} {
+			header_up -Authorization
+			flush_interval -1
+		}
+	}
+
 	handle {
-		respond "MCP platform: /office/mcp  /webtool/mcp" 200
+		respond "MCP platform" 200
 	}
 }

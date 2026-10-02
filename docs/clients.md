@@ -5,7 +5,12 @@
 | Server | URL |
 |---|---|
 | office | `https://<host>/office/mcp` |
-| webtool | `https://<host>/webtool/mcp` |
+| webtool（`web_search`、`read_url`） | `https://<host>/webtool/mcp` |
+| markitdown / docling / excel / duckdb / time / chart | `https://<host>/<名称>/mcp` |
+| browser（Playwright，专用通道） | `https://<host>/browser/mcp` |
+
+第三方 server 的说明、风险与启用方式见 [`servers/third-party/README.md`](../servers/third-party/README.md)。
+`/browser` 只认 `MCP_BROWSER_TOKENS`，普通 token 不能用。
 
 鉴权：`Authorization: Bearer <token>`，token 来自部署时的 `MCP_AUTH_TOKENS`。
 
