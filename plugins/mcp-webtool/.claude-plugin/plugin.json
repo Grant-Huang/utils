@@ -1,0 +1,14 @@
+{
+  "name": "mcp-webtool",
+  "version": "0.1.0",
+  "description": "联网搜索并抓取正文（web_search），以及读取单个公开网页（read_url，带 SSRF 防护）",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "webtool"
+  ]
+}

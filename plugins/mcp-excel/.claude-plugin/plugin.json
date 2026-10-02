@@ -1,0 +1,14 @@
+{
+  "name": "mcp-excel",
+  "version": "0.1.0",
+  "description": "读写已有 xlsx：公式、图表、条件格式等（excel-mcp-server）",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "excel"
+  ]
+}

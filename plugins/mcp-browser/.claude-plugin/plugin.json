@@ -1,0 +1,14 @@
+{
+  "name": "mcp-browser",
+  "version": "0.1.0",
+  "description": "Playwright 浏览器自动化（专用通道，高权限）。需要单独的浏览器 token",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "browser"
+  ]
+}

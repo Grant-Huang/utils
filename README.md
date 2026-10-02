@@ -8,6 +8,7 @@ utils/
 │   ├── office/     Node   生成 docx / pptx / xlsx（docx-js 等），含 demo 前端
 │   ├── webtool/    Python 搜索 → rerank → 抓取；`read_url` 读单个网页（带 SSRF 防护）
 │   └── third-party/ 第三方 MCP 的镜像定义：markitdown、docling、excel、chart、duckdb、time、playwright
+├── .claude-plugin/ + plugins/   Claude Code 插件集市：MCP 插件（连接服务）与 Skill 插件（使用服务的工作流）
 ├── deploy/         docker-compose + Caddy（路径前缀路由、自动 HTTPS）+ authcheck（第三方统一鉴权）
 └── docs/clients.md 各客户端如何接入
 ```
@@ -53,5 +54,10 @@ cd servers/office  && npm install && npm test                       # 11 个端�
 cd servers/webtool && pip install -e ".[dev]" && pytest             # 54 个测试：MCP 层 + SSRF 防护（不联网）
 cd deploy/authcheck && pytest                                       # 11 个测试：统一鉴权
 ```
+
+## MCP 集市与 Skill 集市
+
+仓库本身是一个 Claude Code 插件集市：`claude plugin install skill-web-research@utils` 会连同它依赖的 `mcp-webtool` 一起装好。
+用法、收录清单、如何新增插件见 [docs/marketplace.md](docs/marketplace.md)。
 
 各 server 的详细说明见 `servers/office/README.md`、`servers/webtool/README.md`。

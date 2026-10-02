@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "browser": {
+      "type": "http",
+      "url": "${UTILS_MCP_URL}/browser/mcp",
+      "headers": {
+        "Authorization": "Bearer ${UTILS_BROWSER_TOKEN}"
+      }
+    }
+  }
+}

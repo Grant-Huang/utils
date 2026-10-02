@@ -1,0 +1,14 @@
+{
+  "name": "mcp-markitdown",
+  "version": "0.1.0",
+  "description": "把 Word / PPT / Excel / HTML / ZIP 转成 Markdown（convert_to_markdown）。注意：不带 OCR，图片会返回空",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "markitdown"
+  ]
+}
