@@ -11,7 +11,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const example = JSON.parse(readFileSync(path.join(root, 'examples/asr-report.json'), 'utf8'));
-const PORT = 18911, BASE = `http://127.0.0.1:${PORT}`, TOKEN = 'test-token';
+const PORT = Number(process.env.TEST_PORT) || 38911, BASE = `http://127.0.0.1:${PORT}`, TOKEN = 'test-token';
 let proc;
 
 before(async () => {
@@ -35,7 +35,7 @@ const httpClient = async (token = TOKEN) => {
 };
 
 test('refuses to start without auth config', async () => {
-  const p = spawn('node', ['src/http/bridge.js'], { cwd: root, env: { ...process.env, PORT: '18912', MCP_AUTH_TOKENS: '' }, stdio: 'pipe' });
+  const p = spawn('node', ['src/http/bridge.js'], { cwd: root, env: { ...process.env, PORT: '38912', MCP_AUTH_TOKENS: '' }, stdio: 'pipe' });
   const code = await new Promise(r => p.on('exit', r));
   assert.notEqual(code, 0);
 });
@@ -130,5 +130,45 @@ test('MCP over stdio: embeds the file inline', async () => {
   const res = r.content.find(x => x.type === 'resource');
   assert.ok(res, 'stdio should embed the blob');
   assert.equal(Buffer.from(res.resource.blob, 'base64').subarray(0, 2).toString(), 'PK');
+  await c.close();
+});
+
+// ---- 回归：xlsx 颜色必须是合法的 8 位 ARGB（曾因重复拼 FF 前缀生成 10 位的 FFFF1F4E79） ----
+import JSZip from 'jszip';
+import { argb } from '../src/lib/renderers/xlsx.js';
+
+async function stylesRgb(buf) {
+  const zip = await JSZip.loadAsync(buf);
+  const xml = await zip.file('xl/styles.xml').async('string');
+  return [...xml.matchAll(/rgb="([^"]*)"/g)].map(m => m[1]);
+}
+
+test('argb() normalises the accepted colour spellings and rejects the rest', () => {
+  assert.equal(argb('70AD47'), 'FF70AD47');
+  assert.equal(argb('#70ad47'), 'FF70AD47');
+  assert.equal(argb('FF70AD47'), 'FF70AD47');
+  for (const bad of ['red', '70AD4', 'FFFF1F4E79', '', undefined]) assert.throws(() => argb(bad), /invalid color/);
+});
+
+test('xlsx with the default skill only contains valid ARGB colours', async () => {
+  const { render } = await import('../src/lib/render.js');
+  const buf = await render('xlsx', JSON.parse(readFileSync(path.join(root, 'examples/asr-report.xlsx.json'), 'utf8')), {});
+  const colours = await stylesRgb(buf);
+  assert.ok(colours.length > 0);
+  for (const c of colours) assert.match(c, /^[0-9A-F]{8}$/, `invalid colour in styles.xml: ${c}`);
+});
+
+test('headerFill accepts 6-digit and #-prefixed colours; an invalid one is a clear isError', async () => {
+  const c = await httpClient();
+  const doc = (fill) => ({ sheets: [{ name: 'S', headerFill: fill, data: [['a', 'b'], [1, 2]] }] });
+  for (const fill of ['70AD47', '#70AD47']) {
+    const r = await c.callTool({ name: 'render_xlsx', arguments: { document: doc(fill), inline: true } });
+    assert.ok(!r.isError, `fill ${fill} should work`);
+    const blob = r.content.find(x => x.type === 'resource').resource.blob;
+    assert.ok((await stylesRgb(Buffer.from(blob, 'base64'))).includes('FF70AD47'));
+  }
+  const bad = await c.callTool({ name: 'render_xlsx', arguments: { document: doc('red') } });
+  assert.equal(bad.isError, true);
+  assert.match(bad.content[0].text, /invalid color/);
   await c.close();
 });

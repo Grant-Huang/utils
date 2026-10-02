@@ -3,9 +3,19 @@
 
 import XLSX from 'xlsx-js-style';
 
+// 颜色统一规范成 8 位 ARGB。接受 "70AD47"、"#70AD47"、"FF70AD47"。
+// 之前这里无条件拼 "FF" 前缀，而默认 skill 里的颜色本来就带 FF，结果成了 10 位的 "FFFF1F4E79"，
+// 不是合法的 ARGB，openpyxl 等库读不了生成的文件。
+export function argb(color) {
+  const c = String(color ?? '').replace(/^#/, '').toUpperCase();
+  if (/^[0-9A-F]{6}$/.test(c)) return `FF${c}`;
+  if (/^[0-9A-F]{8}$/.test(c)) return c;
+  throw new Error(`invalid color "${color}": use 6 hex digits like 70AD47 (or 8 with alpha)`);
+}
+
 const headerStyle = (fill) => ({
   font: { name: '微软雅黑', sz: 11, bold: true, color: { rgb: 'FFFFFFFF' } },
-  fill: { fgColor: { rgb: `FF${fill}` } },
+  fill: { fgColor: { rgb: argb(fill) } },
   alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
   border: {
     top: { style: 'thin', color: { rgb: 'FFB4C7E7' } },
