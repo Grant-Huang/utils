@@ -1,0 +1,38 @@
+{
+  "name": "mcp-duckdb",
+  "version": "0.1.0",
+  "description": "用 SQL 分析 DuckDB 文件，可直接 read_csv / read_xlsx；默认只读",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "duckdb"
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "DuckDB 数据分析",
+      "summary": "用 SQL 分析 DuckDB 文件，可直接查 CSV 和 xlsx，默认只读",
+      "category": "data-analysis",
+      "origin": "third-party",
+      "risk": "medium",
+      "riskNote": "只读模式只防写入、不防读文件：SQL 能读容器内任意文件（已实测），必须隔离",
+      "endpoint": "/duckdb/mcp",
+      "tokenScope": "default",
+      "tags": [
+        "SQL",
+        "csv",
+        "xlsx"
+      ],
+      "upstream": {
+        "name": "mcp-server-motherduck",
+        "version": "1.0.8",
+        "license": "包元数据未声明，请到上游仓库确认",
+        "url": "https://github.com/motherduckdb/mcp-server-motherduck"
+      }
+    }
+  }
+}

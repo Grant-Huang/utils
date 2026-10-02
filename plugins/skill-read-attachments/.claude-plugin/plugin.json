@@ -1,0 +1,33 @@
+{
+  "name": "skill-read-attachments",
+  "version": "0.1.0",
+  "description": "读取用户附件的工作流：按文件类型选择 markitdown 或 docling，并如实说明图片没有 OCR",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "skill",
+    "attachments",
+    "pdf",
+    "docx"
+  ],
+  "dependencies": [
+    "mcp-markitdown",
+    "mcp-docling"
+  ],
+  "metadata": {
+    "market": {
+      "type": "skill",
+      "title": "读取用户附件",
+      "summary": "按文件类型选 markitdown 或 docling，用 data: URI 传文件，如实说明图片没有 OCR",
+      "category": "attachments",
+      "tags": [
+        "附件",
+        "pdf",
+        "docx"
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "skill-web-research",
+  "version": "0.1.0",
+  "description": "联网调研工作流：web_search 找资料、read_url 精读、带来源引用并处理失败",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "skill",
+    "research",
+    "web"
+  ],
+  "dependencies": [
+    "mcp-webtool"
+  ],
+  "metadata": {
+    "market": {
+      "type": "skill",
+      "title": "联网调研",
+      "summary": "web_search 找资料、read_url 精读、带来源引用，失败时不编造",
+      "category": "research",
+      "tags": [
+        "调研",
+        "引用"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+import json, os, urllib.request
+
+URL = "{{URL}}"
+TOKEN = os.environ["{{TOKEN_ENV}}"]          # token 只放环境变量，不要写进代码
+
+
+def rpc(payload, session=None):
+    headers = {"content-type": "application/json", "accept": "application/json, text/event-stream",
+               "authorization": f"Bearer {TOKEN}"}
+    if session:
+        headers["mcp-session-id"] = session
+    req = urllib.request.Request(URL, json.dumps(payload).encode(), headers)
+    with urllib.request.urlopen(req, timeout=60) as r:
+        body = r.read().decode()
+        session = r.headers.get("mcp-session-id") or session
+        is_sse = r.headers.get("content-type", "").startswith("text/event-stream")
+    if is_sse:                                # 服务可能以 SSE 形式返回
+        body = next(line[5:] for line in body.splitlines() if line.startswith("data:"))
+    return (json.loads(body) if body.strip() else {}), session
+
+
+_, sid = rpc({"jsonrpc": "2.0", "id": 1, "method": "initialize",
+              "params": {"protocolVersion": "2025-06-18", "capabilities": {},
+                         "clientInfo": {"name": "my-service", "version": "1"}}})
+rpc({"jsonrpc": "2.0", "method": "notifications/initialized"}, sid)
+result, _ = rpc({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+                 "params": {"name": "{{TOOL}}", "arguments": {{ARGS_JSON}}}}, sid)
+print(json.dumps(result, ensure_ascii=False, indent=2))

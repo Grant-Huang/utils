@@ -1,0 +1,69 @@
+{
+  "name": "utils",
+  "description": "utils 项目的 MCP 集市与 Skill 集市：MCP 插件只负责连接服务，Skill 插件提供使用这些服务的工作流",
+  "owner": {
+    "name": "Grant Huang"
+  },
+  "plugins": [
+    {
+      "name": "mcp-office",
+      "source": "./plugins/mcp-office",
+      "description": "生成 Word / PowerPoint / Excel 文件，返回下载链接"
+    },
+    {
+      "name": "mcp-webtool",
+      "source": "./plugins/mcp-webtool",
+      "description": "联网搜索并抓取正文；读取单个公开网页（带 SSRF 防护）"
+    },
+    {
+      "name": "mcp-markitdown",
+      "source": "./plugins/mcp-markitdown",
+      "description": "Word / PPT / Excel / HTML / ZIP 转 Markdown（不带 OCR）"
+    },
+    {
+      "name": "mcp-docling",
+      "source": "./plugins/mcp-docling",
+      "description": "PDF 结构化解析，适合扫描件和复杂表格"
+    },
+    {
+      "name": "mcp-excel",
+      "source": "./plugins/mcp-excel",
+      "description": "读写已有 xlsx：公式、图表、条件格式"
+    },
+    {
+      "name": "mcp-chart",
+      "source": "./plugins/mcp-chart",
+      "description": "AntV 图表（27 种）；数据是否出站取决于服务端配置"
+    },
+    {
+      "name": "mcp-duckdb",
+      "source": "./plugins/mcp-duckdb",
+      "description": "用 SQL 分析 DuckDB 文件，可直接 read_csv / read_xlsx，默认只读"
+    },
+    {
+      "name": "mcp-time",
+      "source": "./plugins/mcp-time",
+      "description": "当前时间与时区换算"
+    },
+    {
+      "name": "mcp-browser",
+      "source": "./plugins/mcp-browser",
+      "description": "Playwright 浏览器自动化（专用通道，高权限，需单独 token）"
+    },
+    {
+      "name": "skill-office-reports",
+      "source": "./plugins/skill-office-reports",
+      "description": "Skill：生成 Word / PPT / Excel 报告的工作流（依赖 mcp-office）"
+    },
+    {
+      "name": "skill-web-research",
+      "source": "./plugins/skill-web-research",
+      "description": "Skill：联网调研并带来源引用（依赖 mcp-webtool）"
+    },
+    {
+      "name": "skill-read-attachments",
+      "source": "./plugins/skill-read-attachments",
+      "description": "Skill：读取用户附件，按类型选 markitdown 或 docling（依赖 mcp-markitdown、mcp-docling）"
+    }
+  ]
+}

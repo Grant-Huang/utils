@@ -1,0 +1,37 @@
+{
+  "name": "mcp-browser",
+  "version": "0.1.0",
+  "description": "Playwright 浏览器自动化（专用通道，高权限）。需要单独的浏览器 token",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "browser"
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "Playwright 浏览器自动化",
+      "summary": "浏览器自动化（点击、填表、截图、执行 JS）。高权限，仅限专用 token",
+      "category": "automation",
+      "origin": "third-party",
+      "risk": "high",
+      "riskNote": "默认暴露 browser_run_code_unsafe（官方称等价 RCE）、browser_evaluate、browser_file_upload；官方声明它不是安全边界",
+      "endpoint": "/browser/mcp",
+      "tokenScope": "browser",
+      "tags": [
+        "浏览器",
+        "Playwright"
+      ],
+      "upstream": {
+        "name": "@playwright/mcp",
+        "version": "0.0.83",
+        "license": "Apache-2.0",
+        "url": "https://github.com/microsoft/playwright-mcp"
+      }
+    }
+  }
+}

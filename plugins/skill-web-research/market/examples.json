@@ -1,0 +1,6 @@
+{
+  "prompts": [
+    "调研一下 Streamable HTTP 和 SSE 两种 MCP 传输方式的区别，给出处。",
+    "读一下这个网页并总结要点：https://example.com/article"
+  ]
+}

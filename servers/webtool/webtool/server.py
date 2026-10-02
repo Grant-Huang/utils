@@ -27,13 +27,14 @@ import sys
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 
-from .core import DEFAULTS, run
+from .core import DEFAULTS, fetch_page_ex, run
+from .urlguard import check_url
 
 mcp = MCPServer(
     "webtool",
     instructions=(
-        "Web search + page fetch. Call `web_search` with a query; it searches, reranks the hits "
-        "and returns the cleaned markdown of the top pages together with their URLs."
+        "Web search + page fetch. `web_search` searches, reranks the hits and returns the cleaned markdown "
+        "of the top pages with their URLs. `read_url` reads one public http(s) page as markdown."
     ),
 )
 
@@ -99,6 +100,48 @@ async def web_search(
         parts.append(content[:max_chars_per_page] + ("\n\n…[truncated]" if truncated else ""))
         parts.append("")
     return "\n".join(parts)
+
+
+@mcp.tool()
+async def read_url(url: str, fetch: str = "crawl4ai", max_chars: int = 20000) -> str:
+    """Read one public web page and return it as clean markdown (the step after web_search).
+
+    Only public http(s) pages are allowed: private / loopback / link-local / cloud-metadata
+    addresses, non-web ports and URLs with embedded credentials are refused.
+
+    Args:
+        url: the page to read (http or https).
+        fetch: "crawl4ai" (default, renders JS), "playwright" (JS-heavy pages) or "plain" (fastest;
+            also validates every redirect hop before connecting).
+        max_chars: truncate the content to this many characters.
+    """
+    if fetch not in ("crawl4ai", "playwright", "plain"):
+        raise ToolError("fetch must be crawl4ai | playwright | plain")
+    max_chars = max(500, min(max_chars, 100000))
+    try:
+        # DNS 解析是同步阻塞调用，放进线程
+        url = await asyncio.to_thread(check_url, url)
+    except ValueError as e:
+        raise ToolError(str(e))
+
+    async with _SEM:
+        try:
+            ok, content, final_url = await asyncio.to_thread(fetch_page_ex, url, fetch, True)
+        except ValueError as e:                  # plain 引擎在重定向某一跳被拦截
+            raise ToolError(str(e))
+        except Exception as e:                   # 不把内部异常细节（可能含代理地址等）返回给调用方
+            raise ToolError(f"fetch failed ({type(e).__name__})")
+
+    # 抓取后再校验最终 URL：crawl4ai / playwright 的重定向由浏览器处理，发生在我们校验之前。
+    # 发现落到了内网就丢弃内容，保证内网页面的内容不会回到调用方。
+    try:
+        await asyncio.to_thread(check_url, final_url)
+    except ValueError:
+        raise ToolError("page redirected to a non-public address; content discarded")
+    if not ok or not content.strip():
+        raise ToolError("page could not be read or is empty")
+    truncated = len(content) > max_chars
+    return f"URL: {final_url}\n\n" + content[:max_chars] + ("\n\n…[truncated]" if truncated else "")
 
 
 # ---------------------------------------------------------------- HTTP 部署

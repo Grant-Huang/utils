@@ -1,0 +1,32 @@
+{
+  "name": "mcp-webtool",
+  "version": "0.1.0",
+  "description": "联网搜索并抓取正文（web_search），以及读取单个公开网页（read_url，带 SSRF 防护）",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "webtool"
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "联网搜索与读取网页",
+      "summary": "搜索并抓取正文（web_search），读取单个公开网页（read_url，带 SSRF 防护）",
+      "category": "web",
+      "origin": "self",
+      "risk": "medium",
+      "riskNote": "会替调用方访问外网；已做 SSRF 防护，但 DNS rebinding 无法在应用层杜绝，建议再配网络层出站规则",
+      "endpoint": "/webtool/mcp",
+      "tokenScope": "default",
+      "tags": [
+        "搜索",
+        "抓取",
+        "SSRF"
+      ]
+    }
+  }
+}

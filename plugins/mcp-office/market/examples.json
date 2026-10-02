@@ -1,0 +1,82 @@
+{
+  "calls": [
+    {
+      "title": "生成一个带条件格式的 Excel",
+      "tool": "render_xlsx",
+      "arguments": {
+        "document": {
+          "sheets": [
+            {
+              "name": "模型对比",
+              "data": [
+                [
+                  "模型",
+                  "得分"
+                ],
+                [
+                  "A",
+                  85
+                ],
+                [
+                  "B",
+                  55
+                ],
+                [
+                  "C",
+                  95
+                ]
+              ],
+              "condFormat": {
+                "column": 1,
+                "low": 60,
+                "high": 90
+              }
+            }
+          ]
+        },
+        "filename": "demo.xlsx"
+      }
+    },
+    {
+      "title": "生成一份 Word 报告",
+      "tool": "render_docx",
+      "arguments": {
+        "document": {
+          "cover": {
+            "title": "技术评估报告",
+            "subtitle": "内部参考"
+          },
+          "chapters": [
+            {
+              "title": "结论",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "方案 A 综合最优。"
+                },
+                {
+                  "type": "table",
+                  "rows": [
+                    [
+                      "方案",
+                      "得分"
+                    ],
+                    [
+                      "A",
+                      "85"
+                    ],
+                    [
+                      "B",
+                      "55"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "filename": "demo.docx"
+      }
+    }
+  ]
+}

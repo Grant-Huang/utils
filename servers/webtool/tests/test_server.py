@@ -53,7 +53,7 @@ def test_bad_host_rejected(client):
 
 def test_tools_list(client):
     tools = rpc(client, "tools/list", headers=AUTH).json()["result"]["tools"]
-    assert [t["name"] for t in tools] == ["web_search"]
+    assert [t["name"] for t in tools] == ["web_search", "read_url"]
     assert "query" in tools[0]["inputSchema"]["required"]
 
 
@@ -89,3 +89,55 @@ def test_invalid_argument_is_error(client):
     r = rpc(client, "tools/call", {"name": "web_search", "arguments": {"query": "q", "fetch": "curl"}},
             headers=AUTH).json()["result"]
     assert r["isError"] is True
+
+
+# ---------------------------------------------------------------- read_url
+def _call_read_url(client, **args):
+    return rpc(client, "tools/call", {"name": "read_url", "arguments": args}, headers=AUTH).json()["result"]
+
+
+def test_tools_list_has_read_url(client):
+    names = [t["name"] for t in rpc(client, "tools/list", headers=AUTH).json()["result"]["tools"]]
+    assert names == ["web_search", "read_url"]
+
+
+def test_read_url_returns_markdown_and_truncates(client, monkeypatch):
+    monkeypatch.setattr(srv, "check_url", lambda u: u)                   # DNS 不在本测试范围
+    seen = {}
+    def fake(url, engine, guard):
+        seen.update(url=url, engine=engine, guard=guard)
+        return True, "x" * 5000, "https://a.test/final"
+    monkeypatch.setattr(srv, "fetch_page_ex", fake)
+    r = _call_read_url(client, url="https://a.test/x", max_chars=1000)
+    text = r["content"][0]["text"]
+    assert not r.get("isError") and text.startswith("URL: https://a.test/final") and "…[truncated]" in text
+    assert seen["guard"] is True                                          # 必须开启逐跳校验
+
+
+@pytest.mark.parametrize("url", ["http://127.0.0.1/admin", "http://169.254.169.254/latest/meta-data", "file:///etc/passwd",
+                                 "http://localhost:6379/"])
+def test_read_url_blocks_internal_targets_without_fetching(client, monkeypatch, url):
+    called = []
+    monkeypatch.setattr(srv, "fetch_page_ex", lambda *a, **k: called.append(a) or (True, "secret", url))
+    r = _call_read_url(client, url=url)
+    assert r["isError"] is True and not called                            # 根本没发起抓取
+
+
+def test_read_url_discards_content_if_redirected_internally(client, monkeypatch):
+    # 入口 URL 是公网，但浏览器类引擎被重定向到了内网：内容必须被丢弃
+    monkeypatch.setattr(srv, "check_url", lambda u: u if "public" in u else (_ for _ in ()).throw(ValueError("non-public")))
+    monkeypatch.setattr(srv, "fetch_page_ex", lambda u, e, g: (True, "INTERNAL SECRET PAGE", "http://10.0.0.5/admin"))
+    r = _call_read_url(client, url="https://public.test/redirector")
+    assert r["isError"] is True and "INTERNAL SECRET" not in r["content"][0]["text"]
+
+
+def test_read_url_hides_internal_exception_details(client, monkeypatch):
+    monkeypatch.setattr(srv, "check_url", lambda u: u)
+    def boom(*a): raise RuntimeError("proxy http://corp-proxy.internal:3128 refused")
+    monkeypatch.setattr(srv, "fetch_page_ex", boom)
+    r = _call_read_url(client, url="https://a.test/")
+    assert r["isError"] is True and "corp-proxy" not in r["content"][0]["text"]
+
+
+def test_read_url_rejects_bad_engine(client):
+    assert _call_read_url(client, url="https://a.test/", fetch="curl")["isError"] is True

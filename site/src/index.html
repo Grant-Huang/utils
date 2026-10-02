@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>utils 集市</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232456d6'/%3E%3Ctext x='16' y='22' font-size='18' text-anchor='middle' fill='white' font-family='sans-serif'%3Eu%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="#/" id="brand">utils 集市</a>
+      <nav class="nav" aria-label="主导航">
+        <a href="#/mcp" data-nav="mcp">MCP 集市</a>
+        <a href="#/skills" data-nav="skills">Skill 集市</a>
+      </nav>
+      <label class="base" title="示例命令和实际调用使用的服务地址">
+        服务地址 <input id="base-url" type="url" spellcheck="false" autocomplete="off">
+      </label>
+    </div>
+  </header>
+  <main class="wrap" id="app" aria-live="polite">加载中…</main>
+  <footer class="wrap foot">内容来自仓库 <code>plugins/</code>，由 <code>python site/build.py</code> 生成。页面不保存你的 token 到磁盘。</footer>
+  <script src="app.js"></script>
+</body>
+</html>

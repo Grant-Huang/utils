@@ -1,0 +1,33 @@
+{
+  "name": "skill-office-reports",
+  "version": "0.1.0",
+  "description": "生成 Word / PPT / Excel 报告的工作流：怎么组织 Document JSON、怎么调用 render_* 并交付下载链接",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "skill",
+    "office",
+    "docx",
+    "pptx",
+    "xlsx"
+  ],
+  "dependencies": [
+    "mcp-office"
+  ],
+  "metadata": {
+    "market": {
+      "type": "skill",
+      "title": "生成 Office 报告",
+      "summary": "教模型怎么组织 Document JSON、调用 render_* 并交付有时效的下载链接",
+      "category": "reporting",
+      "tags": [
+        "docx",
+        "pptx",
+        "xlsx"
+      ]
+    }
+  }
+}

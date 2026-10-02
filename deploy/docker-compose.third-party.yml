@@ -1,0 +1,103 @@
+# 第三方 MCP server（servers/third-party）。叠加在主 compose 之上：
+#   docker compose -f docker-compose.yml -f docker-compose.third-party.yml up -d --build
+# 每个第三方服务是一个 profile，按需启用（也可写进 .env：COMPOSE_PROFILES=markitdown,excel,time）：
+#   --profile markitdown --profile docling --profile excel --profile duckdb --profile time --profile chart --profile browser
+#
+# 安全模型（不是可选项）：
+#   · 入口：Caddy → authcheck 统一鉴权；上游收不到用户 token
+#   · markitdown / docling / duckdb / excel / time 放 `isolated` 网络（internal: true，无外网出口），
+#     因为它们能读容器内任意文件、并可能访问任意网络地址（已实测）
+#   · 只读根文件系统、去掉全部 capability、no-new-privileges、资源上限
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  pids_limit: 256
+
+services:
+  caddy:
+    networks: [default, isolated]
+    environment:
+      EXCEL_INTERNAL_TOKEN: ${EXCEL_INTERNAL_TOKEN:-unset}   # Caddyfile 用它替换用户 token 访问 excel
+
+  authcheck:
+    <<: *hardened
+    build: ./authcheck
+    environment:
+      MCP_AUTH_TOKENS: "${MCP_AUTH_TOKENS:?set MCP_AUTH_TOKENS in .env}"
+      MCP_BROWSER_TOKENS: ${MCP_BROWSER_TOKENS:-}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:-}
+      RATE_LIMIT_PER_MIN: ${RATE_LIMIT_PER_MIN:-60}
+
+  markitdown:
+    <<: *hardened
+    profiles: [markitdown]
+    build: ../servers/third-party/markitdown
+    networks: [isolated]
+    mem_limit: 1g
+
+  docling:
+    <<: *hardened
+    profiles: [docling]
+    build: ../servers/third-party/docling
+    networks: [isolated]
+    mem_limit: 6g
+    tmpfs: [/tmp, /home/app/.cache]
+
+  excel:
+    <<: *hardened
+    profiles: [excel]
+    build: ../servers/third-party/excel
+    networks: [isolated]
+    mem_limit: 1g
+    environment:
+      EXCEL_MCP_AUTH_TOKEN: ${EXCEL_INTERNAL_TOKEN:-}      # 为空时 excel-mcp-server 会拒绝启动
+    volumes:
+      - excel-data:/data          # 唯一可读写的目录（--allow-dir /data）
+
+  duckdb:
+    <<: *hardened
+    profiles: [duckdb]
+    build: ../servers/third-party/duckdb
+    networks: [isolated]
+    mem_limit: 2g
+    volumes:
+      - duckdb-data:/data         # 管理员把 .duckdb / CSV / xlsx 放进来；库以只读方式打开
+
+  time:
+    <<: *hardened
+    profiles: [time]
+    build: ../servers/third-party/time
+    networks: [isolated]
+    mem_limit: 256m
+
+  chart:
+    <<: *hardened
+    profiles: [chart]
+    build: ../servers/third-party/chart
+    # 需要访问渲染服务，所以不在 isolated 里；VIS_REQUEST_SERVER 必须设置，强制你明确选择
+    environment:
+      VIS_REQUEST_SERVER: ${VIS_REQUEST_SERVER:-}      # 为空时容器会拒绝启动（见 chart/Dockerfile）
+      DISABLED_TOOLS: ${CHART_DISABLED_TOOLS:-}
+    mem_limit: 512m
+
+  playwright:
+    <<: *hardened
+    profiles: [browser]
+    build: ../servers/third-party/playwright
+    # 需要外网；专用通道：只认 MCP_BROWSER_TOKENS。官方声明它不是安全边界，浏览器内的操作等同代码执行。
+    read_only: false
+    environment:
+      ALLOWED_HOSTS: ${PUBLIC_HOST:-localhost}
+    shm_size: "1gb"
+    mem_limit: 3g
+
+networks:
+  isolated:
+    internal: true
+
+volumes:
+  excel-data:
+  duckdb-data:

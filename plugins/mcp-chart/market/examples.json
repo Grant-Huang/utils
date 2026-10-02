@@ -1,0 +1,20 @@
+{
+  "calls": [
+    {
+      "title": "饼图（需要先配置渲染服务）",
+      "tool": "generate_pie_chart",
+      "arguments": {
+        "data": [
+          {
+            "category": "A",
+            "value": 10
+          },
+          {
+            "category": "B",
+            "value": 5
+          }
+        ]
+      }
+    }
+  ]
+}

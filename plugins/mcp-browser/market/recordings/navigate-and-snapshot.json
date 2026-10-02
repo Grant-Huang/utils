@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "navigate-and-snapshot",
+  "title": "打开页面并读取无障碍快照",
+  "description": "用专用浏览器 token 调用；页面是本机起的一个测试页面",
+  "recordedAt": "2026-10-02T08:53:28Z",
+  "source": {
+    "plugin": "mcp-browser",
+    "server": {
+      "name": "Playwright",
+      "version": "1.64.0-alpha-1790635538000"
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "browser_navigate",
+      "arguments": {
+        "url": "http://127.0.0.1:18950/"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 2188,
+      "content": [
+        {
+          "type": "text",
+          "text": "### Ran Playwright code\n```js\nawait page.goto('http://127.0.0.1:18950/');\n```\n### Page\n- Page URL: http://127.0.0.1:18950/\n- Page Title: 演示页面\n- Console: 1 errors, 0 warnings\n### Snapshot\n- [Snapshot](.playwright-mcp/page-2026-10-02T08-53-28-228Z.yml)"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "browser_snapshot",
+      "arguments": {},
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 34,
+      "content": [
+        {
+          "type": "text",
+          "text": "### Page\n- Page URL: http://127.0.0.1:18950/\n- Page Title: 演示页面\n- Console: 1 errors, 0 warnings\n### Snapshot\n```yaml\n- generic [active] [ref=e1]:\n  - heading \"设备巡检\" [level=1] [ref=e2]\n  - paragraph [ref=e3]: 本页面由本机测试服务提供。\n  - table [ref=e4]:\n    - rowgroup [ref=e5]:\n      - row [ref=e6]:\n        - columnheader \"设备\" [ref=e7]\n        - columnheader \"状态\" [ref=e8]\n      - row [ref=e9]:\n        - cell \"A-01\" [ref=e10]\n        - cell \"正常\" [ref=e11]\n      - row [ref=e12]:\n        - cell \"B-07\" [ref=e13]\n        - cell \"待检修\" [ref=e14]\n  - button \"提交巡检单\" [ref=e15]\n```\n### Events\n- New console entries: .playwright-mcp/console-2026-10-02T08-53-27-936Z.log#L1"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 2222
+  }
+}

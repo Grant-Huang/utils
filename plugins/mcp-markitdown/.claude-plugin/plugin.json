@@ -1,0 +1,39 @@
+{
+  "name": "mcp-markitdown",
+  "version": "0.1.0",
+  "description": "把 Word / PPT / Excel / HTML / ZIP 转成 Markdown（convert_to_markdown）。注意：不带 OCR，图片会返回空",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "markitdown"
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "MarkItDown 文档转 Markdown",
+      "summary": "把 Word / PPT / Excel / HTML 转成 Markdown，供模型读取",
+      "category": "document-reading",
+      "origin": "third-party",
+      "risk": "medium",
+      "riskNote": "能读容器内任意文件、访问任意网络地址（已实测），因此只放在无外网出口的隔离网络里",
+      "endpoint": "/markitdown/mcp",
+      "tokenScope": "default",
+      "tags": [
+        "docx",
+        "pptx",
+        "xlsx",
+        "html"
+      ],
+      "upstream": {
+        "name": "markitdown-mcp",
+        "version": "0.0.1a7",
+        "license": "MIT",
+        "url": "https://github.com/microsoft/markitdown"
+      }
+    }
+  }
+}

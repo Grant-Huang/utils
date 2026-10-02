@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "docling": {
+      "type": "http",
+      "url": "${UTILS_MCP_URL}/docling/mcp",
+      "headers": {
+        "Authorization": "Bearer ${UTILS_MCP_TOKEN}"
+      }
+    }
+  }
+}

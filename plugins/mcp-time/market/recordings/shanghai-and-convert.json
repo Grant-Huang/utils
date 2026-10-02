@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "shanghai-and-convert",
+  "title": "查上海时间并换算时区",
+  "description": "先查上海当前时间，再把上海 09:00 换算成纽约时间",
+  "recordedAt": "2026-10-02T08:52:42Z",
+  "source": {
+    "plugin": "mcp-time",
+    "server": {
+      "name": "mcp-time",
+      "version": "1.30.0"
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "get_current_time",
+      "arguments": {
+        "timezone": "Asia/Shanghai"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 14,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"timezone\": \"Asia/Shanghai\",\n  \"datetime\": \"2026-10-02T16:52:42+08:00\",\n  \"day_of_week\": \"Friday\",\n  \"is_dst\": false\n}"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "convert_time",
+      "arguments": {
+        "source_timezone": "Asia/Shanghai",
+        "time": "09:00",
+        "target_timezone": "America/New_York"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 13,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"source\": {\n    \"timezone\": \"Asia/Shanghai\",\n    \"datetime\": \"2026-10-02T09:00:00+08:00\",\n    \"day_of_week\": \"Friday\",\n    \"is_dst\": false\n  },\n  \"target\": {\n    \"timezone\": \"America/New_York\",\n    \"datetime\": \"2026-10-01T21:00:00-04:00\",\n    \"day_of_week\": \"Thursday\",\n    \"is_dst\": true\n  },\n  \"time_difference\": \"-12.0h\"\n}"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 27
+  }
+}

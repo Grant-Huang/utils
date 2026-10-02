@@ -1,0 +1,27 @@
+{
+  "snapshotAt": "2026-10-02T08:48:58Z",
+  "server": {
+    "name": "markitdown",
+    "version": ""
+  },
+  "protocolVersion": "2025-06-18",
+  "tools": [
+    {
+      "name": "convert_to_markdown",
+      "description": "Convert a resource described by an http:, https:, file: or data: URI to markdown",
+      "inputSchema": {
+        "properties": {
+          "uri": {
+            "title": "Uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "uri"
+        ],
+        "type": "object",
+        "title": "convert_to_markdownArguments"
+      }
+    }
+  ]
+}

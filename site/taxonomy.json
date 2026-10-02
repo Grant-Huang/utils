@@ -1,0 +1,22 @@
+{
+  "_comment": "分类表。新增分类只需在这里加一项，并在项目的 metadata.market.category 里引用 key。",
+  "mcp": [
+    { "key": "document-generation", "label": "文档生成" },
+    { "key": "document-reading", "label": "文档读取" },
+    { "key": "data-analysis", "label": "数据分析" },
+    { "key": "web", "label": "联网" },
+    { "key": "visualization", "label": "可视化" },
+    { "key": "automation", "label": "浏览器自动化" },
+    { "key": "utility", "label": "工具" }
+  ],
+  "skill": [
+    { "key": "reporting", "label": "报告与文档生成" },
+    { "key": "research", "label": "调研" },
+    { "key": "attachments", "label": "附件处理" }
+  ],
+  "risk": [
+    { "key": "low", "label": "低风险", "hint": "只做无副作用的事，或只写临时文件" },
+    { "key": "medium", "label": "中风险", "hint": "会读写文件、访问网络或把数据送出，已用隔离或限制缓解" },
+    { "key": "high", "label": "高风险", "hint": "高权限，仅限专用 token，默认不启用" }
+  ]
+}

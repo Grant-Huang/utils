@@ -1,0 +1,38 @@
+{
+  "name": "mcp-excel",
+  "version": "0.1.0",
+  "description": "读写已有 xlsx：公式、图表、条件格式等（excel-mcp-server）",
+  "author": {
+    "name": "Grant Huang"
+  },
+  "homepage": "https://github.com/Grant-Huang/utils",
+  "repository": "https://github.com/Grant-Huang/utils",
+  "keywords": [
+    "mcp",
+    "excel"
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "Excel 读写",
+      "summary": "不装 Excel 读写已有 xlsx：公式、图表、条件格式、数据验证等",
+      "category": "data-analysis",
+      "origin": "third-party",
+      "risk": "medium",
+      "riskNote": "会读写服务端指定目录（--allow-dir）里的文件；自带 Bearer 与目录白名单",
+      "endpoint": "/excel/mcp",
+      "tokenScope": "default",
+      "tags": [
+        "xlsx",
+        "公式",
+        "图表"
+      ],
+      "upstream": {
+        "name": "excel-mcp-server",
+        "version": "1.1.1",
+        "license": "MIT",
+        "url": "https://github.com/haris-musa/excel-mcp-server"
+      }
+    }
+  }
+}
