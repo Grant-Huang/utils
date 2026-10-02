@@ -1,0 +1,142 @@
+{
+  "snapshotAt": "2026-10-02T08:48:58Z",
+  "server": {
+    "name": "office-mcp",
+    "version": "0.2.0"
+  },
+  "protocolVersion": "2025-06-18",
+  "tools": [
+    {
+      "name": "render_docx",
+      "title": "Render DOCX",
+      "description": "Generate a DOCX file from a structured Document JSON model. The Document is an object: { cover?, toc?, chapters:[{title,level,blocks:[paragraph|table|flowchart|code|pagebreak|list]}], sheets? (xlsx only), references?, meta? }. Optional skill overrides: page, body, heading, table, code, header, footer, theme, font (read resource office://skill/default for defaults). Returns a download link (HTTP) or an embedded file resource (stdio).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "document": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Document model JSON. See README for the full shape."
+          },
+          "skill": {
+            "description": "Optional style overrides merged onto the defaults.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "filename": {
+            "description": "Suggested filename (default report.docx).",
+            "type": "string",
+            "maxLength": 120
+          },
+          "inline": {
+            "description": "Embed the file bytes in the result instead of returning a download link.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "document"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "render_pptx",
+      "title": "Render PPTX",
+      "description": "Generate a PPTX file from a structured Document JSON model. The Document is an object: { cover?, toc?, chapters:[{title,level,blocks:[paragraph|table|flowchart|code|pagebreak|list]}], sheets? (xlsx only), references?, meta? }. Optional skill overrides: page, body, heading, table, code, header, footer, theme, font (read resource office://skill/default for defaults). Returns a download link (HTTP) or an embedded file resource (stdio).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "document": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Document model JSON. See README for the full shape."
+          },
+          "skill": {
+            "description": "Optional style overrides merged onto the defaults.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "filename": {
+            "description": "Suggested filename (default report.pptx).",
+            "type": "string",
+            "maxLength": 120
+          },
+          "inline": {
+            "description": "Embed the file bytes in the result instead of returning a download link.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "document"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "render_xlsx",
+      "title": "Render XLSX",
+      "description": "Generate a XLSX file from a structured Document JSON model. The Document is an object: { cover?, toc?, chapters:[{title,level,blocks:[paragraph|table|flowchart|code|pagebreak|list]}], sheets? (xlsx only), references?, meta? }. Optional skill overrides: page, body, heading, table, code, header, footer, theme, font (read resource office://skill/default for defaults). Returns a download link (HTTP) or an embedded file resource (stdio).",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "document": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Document model JSON. See README for the full shape."
+          },
+          "skill": {
+            "description": "Optional style overrides merged onto the defaults.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "filename": {
+            "description": "Suggested filename (default report.xlsx).",
+            "type": "string",
+            "maxLength": 120
+          },
+          "inline": {
+            "description": "Embed the file bytes in the result instead of returning a download link.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "document"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

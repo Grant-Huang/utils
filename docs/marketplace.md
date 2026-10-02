@@ -16,6 +16,27 @@
   （格式来自 [Claude Code MCP 文档](https://code.claude.com/docs/en/mcp)）。要在 Skill 的 `allowed-tools` 里预授权时用这个全名；
   我们的 Skill 没有预授权，调用仍会按你的权限设置询问。
 
+## 集市网站
+
+除了命令行，集市还有一个静态网站：MCP 页和 Skill 页，每个项目有标题、简介、分类 tab，点进去是**详情 / 调用说明 / Demo** 三个页签（没有 demo 的项目只显示前两个）。
+
+| | MCP | Skill |
+|---|---|---|
+| 分类依据 | 能力（文档生成、文档读取、数据分析、联网、可视化、浏览器自动化、工具） | 任务场景（报告生成、调研、附件处理） |
+| 详情页 | 风险说明、上游与钉死的版本、工具清单（来自真实服务的快照）、被哪些 Skill 使用 | 适用/不适用、依赖的 MCP、模型靠什么触发（description）、SKILL.md 源文件 |
+| 调用说明 | token、5 种接入方式（含外部服务用的 Python）、示例调用、排错表 | 安装、**下载包用于部署到自己的服务**、依赖的连接配置、示例提问 |
+| Demo | **录制回放**（真实调用/真实模型会话）；能安全演示的再加**实际调用**（浏览器用你自己的 token 直接调） | **录制回放**（真实模型会话，包括模型有没有调用 Skill） |
+
+```bash
+pip install -r site/requirements.txt
+python site/build.py            # 生成 site/dist/
+python site/build.py --check    # 只校验数据
+```
+
+部署：`deploy/` 的 Caddy 在 `/market/` 提供 `site/dist/`，**默认只允许内网访问**（`MARKET_ALLOWED_IPS`）。
+外部服务如何用 token 调用、如何下载并部署 Skill：见 [external-use.md](external-use.md)。
+**新增/更新项目**：见 `.claude/skills/add-market-item/`（给编程工具用的 Skill，附脚手架和校验）。
+
 ## 使用
 
 1. **设置环境变量**（部署好 `deploy/` 之后，指向你的服务；MCP 插件从环境变量读取地址和 token，仓库里不存任何密钥）：
@@ -58,17 +79,20 @@
 
 ## 新增一个插件
 
+用脚手架搭骨架（只生成骨架，不编造内容），再补全、校验。编程工具（Claude Code）在本仓库里会自动加载 `.claude/skills/add-market-item/`，
+按它的流程做即可；手工做也一样：
+
 ```bash
-# 1. 建目录：plugins/<名字>/.claude-plugin/plugin.json
-#    MCP 插件再放 .mcp.json；Skill 插件放 skills/<技能名>/SKILL.md
-# 2. 在 .claude-plugin/marketplace.json 的 plugins 数组里加一项（name 必须与 plugin.json 的 name 一致）
-# 3. 校验
-claude plugin validate ./plugins/<名字>
-claude plugin validate .
+python scripts/market/new_item.py mcp mcp-foo --title "Foo" --summary "一句话" --category utility --origin self \
+    --risk low --risk-note "一句话说明风险与缓解" --endpoint /foo/mcp --server-name foo
+python scripts/market/snapshot_tools.py mcp-foo --url http://127.0.0.1:PORT/mcp     # 工具清单来自真实服务
+# 补全 market/detail.md、market/examples.json（只写实测过的事实）；对安全的调用做真实录制：
+python scripts/market/record_mcp.py mcp-foo --help
+python site/build.py --check && claude plugin validate .
 ```
 
-规则（来自官方文档，`validate` 会检查）：名字用 kebab-case，**不能以 `claude-`、`anthropic-` 开头**；`source` 用相对路径且不含 `..`；
-Skill 依赖的 MCP 插件写进 `dependencies`。写 Skill 时只写**实测过的行为**，没验证过的要在文里标出来。
+骨架里的 `TODO(` 没填完、示例参数不符合工具 schema、录制里出现明文 token、依赖不存在等，`--check` 都会报错。
+命名规则（`claude plugin validate` 也检查）：kebab-case，不能以 `claude-`、`anthropic-` 开头。字段规范见 `.claude/skills/add-market-item/reference.md`。
 
 ## 安全提醒
 
@@ -77,10 +101,20 @@ Skill 依赖的 MCP 插件写进 `dependencies`。写 Skill 时只写**实测过
 
 ## 验证过什么、没验证什么
 
-已验证：集市与 12 个插件均通过 `claude plugin validate`；在隔离的 HOME 下添加集市、安装 Skill 插件并自动带上依赖；
-`mcp-office` 经 Caddy 连到真实的 office 服务（`Connected` / 401 / 缺变量三种情形）。
+**已验证**
+- 集市与插件通过 `claude plugin validate`；隔离环境里添加集市、安装 Skill 会自动带上依赖；`mcp-office` 经 Caddy 连到真实服务（`Connected` / 401 / 缺变量）。
+- 网站：`site/tests` 下的数据校验（22 个，含每条规则的反向用例）、脚手架流程（5 个）、真实浏览器 UI（17 个）、Python 示例代码真跑（4 个）、
+  "实际调用"面板经网关真实调用 time 和 office（5 个）。
+- **录制全部来自真实运行**：8 份 MCP 录制（office×2、time、markitdown、excel、duckdb、webtool 的 SSRF 防护、browser）和 1 份 Skill 会话录制。
+- 真实录制过程中发现并修复了 4 个问题：Skill 描述不够明确导致没被触发、Skill 漏写 `condFormat` 格式导致模型传错参数、
+  xlsx 渲染器颜色值非法（openpyxl 读不了生成的文件）、站点输入框失焦会吞掉下一次点击。
 
-**未验证**：
-- 其余 8 个 MCP 插件只通过了格式校验。它们由同一个模板生成，只是路径不同，但没有逐个连真实服务。
-- **Skill 是否会被模型在合适的时机触发、触发后效果如何，没有在真实模型会话里测过**（需要模型调用）。`description` 是触发的依据，上线后建议用真实请求试几轮并调整。
-- 集市面向的是 Claude Code。Cursor 等其他客户端不用这套插件，直接用 [`docs/clients.md`](clients.md) 里的 URL 即可。
+**没验证 / 已知缺口**
+- **只有 1 个 Skill（`skill-office-reports`）有真实录制**，而且只测了很少的请求。
+  `skill-web-research`：沙箱访问不了外网，没法真实录制；`skill-read-attachments`：真实测试里**两次都没触发**，且约 12 KB 的 docx 因模型抄不准 base64 而失败——需要文件上传通道。
+  这两个 Skill 没有 demo 页签。
+- `mcp-docling`、`mcp-chart` 没有录制：沙箱里没有 docling 模型/真实图片渲染服务。
+- 其余 MCP 插件只通过了格式校验，没有逐个经插件连真实服务（与 `mcp-office` 同一模板）。
+- Docker 镜像和 compose 没有真实构建/启动过（沙箱没有 Docker 守护进程），只校验了配置；`/market/` 的内网限制在 Docker 的 NAT 网络下可能放行所有人，务必在上层再限制。
+- token 没有身份和按 MCP 授权，也没有审计，详见 [external-use.md](external-use.md)。
+- 集市面向 Claude Code。Cursor 等其他客户端直接用 [`clients.md`](clients.md) 里的 URL。

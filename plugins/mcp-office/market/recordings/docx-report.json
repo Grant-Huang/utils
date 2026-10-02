@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "docx-report",
+  "title": "生成一份 Word 报告",
+  "description": "带封面和对比表的简短报告",
+  "recordedAt": "2026-10-02T08:52:42Z",
+  "source": {
+    "plugin": "mcp-office",
+    "server": {
+      "name": "office-mcp",
+      "version": "0.2.0"
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "render_docx",
+      "arguments": {
+        "document": {
+          "cover": {
+            "title": "技术评估报告",
+            "subtitle": "内部参考"
+          },
+          "chapters": [
+            {
+              "title": "结论",
+              "blocks": [
+                {
+                  "type": "paragraph",
+                  "text": "方案 A 综合最优。"
+                },
+                {
+                  "type": "table",
+                  "rows": [
+                    [
+                      "方案",
+                      "得分"
+                    ],
+                    [
+                      "A",
+                      "85"
+                    ],
+                    [
+                      "B",
+                      "55"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "filename": "demo.docx"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 63,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"filename\":\"demo.docx\",\"bytes\":11930,\"mime\":\"application/vnd.openxmlformats-officedocument.wordprocessingml.document\",\"url\":\"https://mcp.example.com/office/files/fe50c4bd-45b5-4a4c-90f9-8c607352f39b/demo.docx\",\"expires_at\":\"2026-10-02T09:52:42.735Z\",\"ttl_seconds\":3600}"
+        },
+        {
+          "name": "demo.docx",
+          "uri": "https://mcp.example.com/office/files/fe50c4bd-45b5-4a4c-90f9-8c607352f39b/demo.docx",
+          "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "type": "resource_link"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 63
+  }
+}

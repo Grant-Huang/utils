@@ -7,3 +7,4 @@ out/
 *.log
 deploy/.env
 .pytest_cache/
+site/dist/

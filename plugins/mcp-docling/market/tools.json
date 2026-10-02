@@ -1,0 +1,102 @@
+{
+  "snapshotAt": "2026-10-02T08:48:58Z",
+  "server": {
+    "name": "docling",
+    "version": ""
+  },
+  "protocolVersion": "2025-06-18",
+  "tools": [
+    {
+      "name": "is_document_in_local_cache",
+      "title": "Is Docling document in cache",
+      "description": "Verify if a Docling document is already converted and in the local cache.",
+      "inputSchema": {
+        "properties": {
+          "document_key": {
+            "description": "The unique identifier of the document in the local cache.",
+            "title": "Document Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "document_key"
+        ],
+        "type": "object",
+        "title": "is_document_in_local_cacheArguments"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "drop_document_from_local_cache",
+      "title": "Drop document from local cache",
+      "description": "Remove a document from the local cache and release its memory.\n\n    Call this tool when a client is finished with a document and wants to\n    release the memory it occupies. After a successful call the key is no\n    longer present in the cache.\n    ",
+      "inputSchema": {
+        "properties": {
+          "document_key": {
+            "description": "The unique identifier of the document to remove from the local cache.",
+            "title": "Document Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "document_key"
+        ],
+        "type": "object",
+        "title": "drop_document_from_local_cacheArguments"
+      },
+      "annotations": {
+        "destructiveHint": true,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "name": "convert_document_into_docling_document",
+      "title": "Convert document into Docling document",
+      "description": "Convert a document of any type from a URL or local path and store in local cache.\n\n    This tool takes a document's URL or local file path, converts it using\n    the configured converter (remote API or local), and stores the resulting\n    Docling document in a local cache. It returns an output with a boolean\n    set to False along with the document's unique cache key. If the document\n    was already in the local cache, the conversion is skipped and the output\n    boolean is set to True.\n    ",
+      "inputSchema": {
+        "properties": {
+          "source": {
+            "description": "The URL or local file path to the document. Object-storage URIs (abfs://, az://, gcs://, gs://, s3://) are supported when the matching provider extra is installed.",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source"
+        ],
+        "type": "object",
+        "title": "convert_document_into_docling_documentArguments"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "name": "convert_directory_files_into_docling_document",
+      "title": "Convert files from directory into Docling document",
+      "description": "Convert all files from a local directory path and store them in local cache.\n\n    This tool takes a local directory path, converts every file in the directory using\n    the configured converter (remote API or local) and stores the resulting Docling\n    documents in a local cache. It returns a list of conversion outputs, where each\n    output consists of a boolean set to False along with a document's unique cache key.\n    If a document was already in the local cache, the conversion is skipped and the\n    output boolean is set to True.\n    ",
+      "inputSchema": {
+        "properties": {
+          "source": {
+            "description": "The path to a local directory",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source"
+        ],
+        "type": "object",
+        "title": "convert_directory_files_into_docling_documentArguments"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    }
+  ]
+}

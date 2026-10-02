@@ -6,7 +6,7 @@
 
 环境变量（与 office / webtool 同一套约定）：
   MCP_AUTH_TOKENS      逗号分隔的 Bearer token；未设置则拒绝启动
-  MCP_ALLOWED_ORIGINS  逗号分隔；请求带 Origin 头时必须在其中（防浏览器跨站调用）
+  MCP_ALLOWED_ORIGINS  逗号分隔；请求带 Origin 头时必须在其中，或与 Host 同源（防浏览器跨站调用）
   MCP_BROWSER_TOKENS   专用通道 scope=browser 的 token（Playwright 这类高权限工具）；
                        与 MCP_AUTH_TOKENS 互不通用，未设置则该通道一律 403
   RATE_LIMIT_PER_MIN   每个 token 每分钟请求数，默认 120
@@ -43,7 +43,10 @@ class Checker:
             return 403, "unknown scope"
         origin = headers.get("Origin")
         if origin and origin not in self.origins:
-            return 403, "origin not allowed"
+            # 与 Host 同源也放行：集市站点和 MCP 在同一个网关域名下，浏览器从站点发起的调用会带上同源的 Origin
+            host = headers.get("X-Forwarded-Host") or headers.get("Host") or ""
+            if not host or urlparse(origin).netloc != host:
+                return 403, "origin not allowed"
         auth = headers.get("Authorization", "")
         supplied = auth[7:] if auth.lower().startswith("bearer ") else ""
         # 逐个常量时间比较，找出匹配的 token（同时用作限流的 key）

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "create-write-read",
+  "title": "创建工作簿、写入、再读回",
+  "description": "三步：create_workbook → write_range → read_range",
+  "recordedAt": "2026-10-02T08:52:43Z",
+  "source": {
+    "plugin": "mcp-excel",
+    "server": {
+      "description": "Create, read and edit Excel workbooks without Microsoft Excel.",
+      "name": "excel-mcp-server",
+      "title": "Excel MCP Server",
+      "version": "1.1.1",
+      "websiteUrl": "https://github.com/haris-musa/excel-mcp-server"
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "create_workbook",
+      "arguments": {
+        "path": "demo.xlsx",
+        "sheets": [
+          "数据"
+        ]
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 16,
+      "content": [
+        {
+          "text": "Created demo.xlsx with sheets ['数据'].",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "write_range",
+      "arguments": {
+        "path": "demo.xlsx",
+        "sheet": "数据",
+        "start_cell": "A1",
+        "rows": [
+          [
+            "名称",
+            "数量"
+          ],
+          [
+            "螺丝",
+            120
+          ]
+        ]
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 15,
+      "content": [
+        {
+          "text": "{\n  \"sheet\": \"数据\",\n  \"range\": \"A1:B2\",\n  \"cells_written\": 4\n}",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "read_range",
+      "arguments": {
+        "path": "demo.xlsx",
+        "sheet": "数据"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 8,
+      "content": [
+        {
+          "text": "{\n  \"sheet\": \"数据\",\n  \"range\": \"A1:B2\",\n  \"values\": [\n    [\n      \"名称\",\n      \"数量\"\n    ],\n    [\n      \"螺丝\",\n      120\n    ]\n  ],\n  \"truncated\": false,\n  \"next_range\": null\n}",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 39
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "ssrf-guard-blocks-internal",
+  "title": "SSRF 防护：内网、云元数据、file:// 都被拒绝",
+  "description": "三次读取都应该被拒绝（isError），且不会有请求到达目标",
+  "recordedAt": "2026-10-02T08:53:09Z",
+  "source": {
+    "plugin": "mcp-webtool",
+    "server": {
+      "name": "webtool",
+      "version": ""
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "read_url",
+      "arguments": {
+        "url": "http://127.0.0.1/"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": true,
+      "durationMs": 3,
+      "content": [
+        {
+          "text": "Error executing tool read_url: URL points to a non-public address and is blocked",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "read_url",
+      "arguments": {
+        "url": "http://169.254.169.254/latest/meta-data/"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": true,
+      "durationMs": 3,
+      "content": [
+        {
+          "text": "Error executing tool read_url: URL points to a non-public address and is blocked",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "read_url",
+      "arguments": {
+        "url": "file:///etc/passwd"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": true,
+      "durationMs": 3,
+      "content": [
+        {
+          "text": "Error executing tool read_url: only http and https URLs are allowed",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 9
+  }
+}

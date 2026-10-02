@@ -1,0 +1,11 @@
+{
+  "calls": [
+    {
+      "title": "解析一份公开 PDF（未实测）",
+      "tool": "convert_document_into_docling_document",
+      "arguments": {
+        "source": "https://arxiv.org/pdf/2408.09869"
+      }
+    }
+  ]
+}

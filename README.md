@@ -52,12 +52,16 @@ office / webtool 自己校验 token；第三方 server 统一经 Caddy → authc
 ```bash
 cd servers/office  && npm install && npm test                       # 11 个端到端测试
 cd servers/webtool && pip install -e ".[dev]" && pytest             # 54 个测试：MCP 层 + SSRF 防护（不联网）
-cd deploy/authcheck && pytest                                       # 11 个测试：统一鉴权
+cd deploy/authcheck && pytest                                       # 12 个测试：统一鉴权
+pytest site/tests -q                                                # 集市站点：数据校验、脚手架、UI、示例代码（UI 需要 Chromium）
 ```
 
 ## MCP 集市与 Skill 集市
 
 仓库本身是一个 Claude Code 插件集市：`claude plugin install skill-web-research@utils` 会连同它依赖的 `mcp-webtool` 一起装好。
-用法、收录清单、如何新增插件见 [docs/marketplace.md](docs/marketplace.md)。
+用法、收录清单见 [docs/marketplace.md](docs/marketplace.md)；外部服务如何用 token 调用 MCP、下载并部署 Skill，见 [docs/external-use.md](docs/external-use.md)。
+
+集市还有一个静态网站（MCP 页、Skill 页、详情/调用说明/Demo 页签，录制回放和实际调用）：`pip install -r site/requirements.txt && python site/build.py`，由 Caddy 在 `/market/` 提供（默认仅内网）。
+新增或更新项目请用 `.claude/skills/add-market-item/`（给编程工具用的 Skill，附脚手架和校验）。
 
 各 server 的详细说明见 `servers/office/README.md`、`servers/webtool/README.md`。

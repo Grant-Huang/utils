@@ -1,0 +1,84 @@
+{
+  "snapshotAt": "2026-10-02T08:48:58Z",
+  "server": {
+    "name": "webtool",
+    "version": ""
+  },
+  "protocolVersion": "2025-06-18",
+  "tools": [
+    {
+      "name": "web_search",
+      "description": "Search the web, rerank the hits, fetch the top pages and return their content as markdown.\n\n    Args:\n        query: search query.\n        search_top: how many search hits to retrieve (1-30).\n        rerank_k: how many hits to keep after reranking and fetch (1-10).\n        rerank: \"cross\" (cross-encoder, best), \"lexical\" (cheap) .\n        fetch: \"crawl4ai\" (default), \"playwright\" (JS-heavy pages) or \"plain\" (fastest).\n        search_backend: \"duckduckgo\", \"searxng\" or \"brave\".\n        max_chars_per_page: truncate each page's content to this many characters.\n    ",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "search_top": {
+            "default": 10,
+            "title": "Search Top",
+            "type": "integer"
+          },
+          "rerank_k": {
+            "default": 6,
+            "title": "Rerank K",
+            "type": "integer"
+          },
+          "rerank": {
+            "default": "cross",
+            "title": "Rerank",
+            "type": "string"
+          },
+          "fetch": {
+            "default": "crawl4ai",
+            "title": "Fetch",
+            "type": "string"
+          },
+          "search_backend": {
+            "default": "duckduckgo",
+            "title": "Search Backend",
+            "type": "string"
+          },
+          "max_chars_per_page": {
+            "default": 8000,
+            "title": "Max Chars Per Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object",
+        "title": "web_searchArguments"
+      }
+    },
+    {
+      "name": "read_url",
+      "description": "Read one public web page and return it as clean markdown (the step after web_search).\n\n    Only public http(s) pages are allowed: private / loopback / link-local / cloud-metadata\n    addresses, non-web ports and URLs with embedded credentials are refused.\n\n    Args:\n        url: the page to read (http or https).\n        fetch: \"crawl4ai\" (default, renders JS), \"playwright\" (JS-heavy pages) or \"plain\" (fastest;\n            also validates every redirect hop before connecting).\n        max_chars: truncate the content to this many characters.\n    ",
+      "inputSchema": {
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "fetch": {
+            "default": "crawl4ai",
+            "title": "Fetch",
+            "type": "string"
+          },
+          "max_chars": {
+            "default": 20000,
+            "title": "Max Chars",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "title": "read_urlArguments"
+      }
+    }
+  ]
+}

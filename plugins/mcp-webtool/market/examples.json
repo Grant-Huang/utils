@@ -1,0 +1,22 @@
+{
+  "calls": [
+    {
+      "title": "读取一个公开网页",
+      "tool": "read_url",
+      "arguments": {
+        "url": "https://example.com/",
+        "fetch": "plain",
+        "max_chars": 2000
+      }
+    },
+    {
+      "title": "搜索并抓取",
+      "tool": "web_search",
+      "arguments": {
+        "query": "MCP Streamable HTTP transport",
+        "rerank_k": 3,
+        "max_chars_per_page": 2000
+      }
+    }
+  ]
+}

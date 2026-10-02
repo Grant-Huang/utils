@@ -16,5 +16,18 @@
   "dependencies": [
     "mcp-markitdown",
     "mcp-docling"
-  ]
+  ],
+  "metadata": {
+    "market": {
+      "type": "skill",
+      "title": "读取用户附件",
+      "summary": "按文件类型选 markitdown 或 docling，用 data: URI 传文件，如实说明图片没有 OCR",
+      "category": "attachments",
+      "tags": [
+        "附件",
+        "pdf",
+        "docx"
+      ]
+    }
+  }
 }

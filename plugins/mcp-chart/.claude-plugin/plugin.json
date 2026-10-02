@@ -10,5 +10,28 @@
   "keywords": [
     "mcp",
     "chart"
-  ]
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "AntV 图表",
+      "summary": "27 种图表（折线、柱状、桑基、思维导图等），返回图片 URL",
+      "category": "visualization",
+      "origin": "third-party",
+      "risk": "medium",
+      "riskNote": "默认会把数据发到蚂蚁的公网渲染服务（已实测）；必须配置私有渲染地址或明确接受",
+      "endpoint": "/chart/mcp",
+      "tokenScope": "default",
+      "tags": [
+        "图表",
+        "AntV"
+      ],
+      "upstream": {
+        "name": "@antv/mcp-server-chart",
+        "version": "0.9.10",
+        "license": "MIT",
+        "url": "https://github.com/antvis/mcp-server-chart"
+      }
+    }
+  }
 }

@@ -14,5 +14,17 @@
   ],
   "dependencies": [
     "mcp-webtool"
-  ]
+  ],
+  "metadata": {
+    "market": {
+      "type": "skill",
+      "title": "联网调研",
+      "summary": "web_search 找资料、read_url 精读、带来源引用，失败时不编造",
+      "category": "research",
+      "tags": [
+        "调研",
+        "引用"
+      ]
+    }
+  }
 }

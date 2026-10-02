@@ -1,0 +1,11 @@
+{
+  "calls": [
+    {
+      "title": "转换一段 HTML（data: URI）",
+      "tool": "convert_to_markdown",
+      "arguments": {
+        "uri": "data:text/html;base64,PGgxPkhlbGxvPC9oMT48cD53b3JsZDwvcD4="
+      }
+    }
+  ]
+}

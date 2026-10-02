@@ -1,0 +1,20 @@
+{
+  "calls": [
+    {
+      "title": "获取上海当前时间",
+      "tool": "get_current_time",
+      "arguments": {
+        "timezone": "Asia/Shanghai"
+      }
+    },
+    {
+      "title": "时区换算",
+      "tool": "convert_time",
+      "arguments": {
+        "source_timezone": "Asia/Shanghai",
+        "time": "09:00",
+        "target_timezone": "America/New_York"
+      }
+    }
+  ]
+}

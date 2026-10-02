@@ -1,0 +1,11 @@
+{
+  "calls": [
+    {
+      "title": "打开页面（高权限，仅专用 token）",
+      "tool": "browser_navigate",
+      "arguments": {
+        "url": "https://example.com/"
+      }
+    }
+  ]
+}

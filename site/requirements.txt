@@ -1,0 +1,3 @@
+markdown-it-py>=3
+jsonschema>=4
+# 站点测试额外需要：pytest、playwright（UI 测试用系统里的 Chromium，路径用环境变量 CHROMIUM 指定）

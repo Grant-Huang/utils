@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "html-to-markdown",
+  "title": "把 HTML 转成 Markdown",
+  "description": "用 data: URI 传入一段 HTML",
+  "recordedAt": "2026-10-02T08:52:43Z",
+  "source": {
+    "plugin": "mcp-markitdown",
+    "server": {
+      "name": "markitdown",
+      "version": ""
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "convert_to_markdown",
+      "arguments": {
+        "uri": "data:text/html;base64,PGgxPkhlbGxvPC9oMT48cD53b3JsZDwvcD4="
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 925,
+      "content": [
+        {
+          "text": "# Hello\n\nworld",
+          "type": "text"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 925
+  }
+}

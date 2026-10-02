@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "kind": "skill",
+  "id": "xlsx-with-colors",
+  "title": "把对比表生成带颜色标注的 Excel",
+  "description": "用户给一张表和着色规则，模型选用 Skill，组织 Document JSON，调用 render_xlsx 并交付带有效期的链接",
+  "recordedAt": "2026-10-02T08:57:46Z",
+  "source": {
+    "plugins": [
+      "skill-office-reports",
+      "mcp-office"
+    ],
+    "model": "claude-sonnet-5-5"
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "user",
+      "text": "把下面这张对比表生成 Excel，并给\"得分\"列设置：低于 60 标绿、高于 90 标红。\n模型A 85\n模型B 55\n模型C 95",
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "Skill",
+      "fullName": "Skill",
+      "arguments": {
+        "skill": "skill-office-reports:office-reports"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "Launching skill: skill-office-reports:office-reports"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "ToolSearch",
+      "fullName": "ToolSearch",
+      "arguments": {
+        "query": "select:mcp__plugin_mcp-office_office__render_xlsx",
+        "max_results": 1
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "content": [
+        {
+          "type": "tool_reference",
+          "tool_name": "mcp__plugin_mcp-office_office__render_xlsx"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "tool_call",
+      "tool": "render_xlsx",
+      "fullName": "mcp__plugin_mcp-office_office__render_xlsx",
+      "arguments": {
+        "document": {
+          "chapters": [],
+          "sheets": [
+            {
+              "name": "对比表",
+              "data": [
+                [
+                  "模型",
+                  "得分"
+                ],
+                [
+                  "模型A",
+                  85
+                ],
+                [
+                  "模型B",
+                  55
+                ],
+                [
+                  "模型C",
+                  95
+                ]
+              ],
+              "cols": [
+                18,
+                10
+              ],
+              "condFormat": {
+                "column": 1,
+                "low": 60,
+                "high": 90
+              }
+            }
+          ]
+        },
+        "filename": "模型对比表.xlsx"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"filename\":\"模型对比表.xlsx\",\"bytes\":19086,\"mime\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"url\":\"https://mcp.example.com/office/files/117fc97e-46da-48d4-99f0-0af941deb758/%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%AF%94%E8%A1%A8.xlsx\",\"expires_at\":\"2026-10-02T09:57:41.298Z\",\"ttl_seconds\":3600}"
+        },
+        {
+          "type": "text",
+          "text": "[Resource link: 模型对比表.xlsx] https://mcp.example.com/office/files/117fc97e-46da-48d4-99f0-0af941deb758/%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%AF%94%E8%A1%A8.xlsx"
+        }
+      ],
+      "truncated": false
+    },
+    {
+      "type": "assistant",
+      "text": "Excel 已生成：[模型对比表.xlsx](https://mcp.example.com/office/files/117fc97e-46da-48d4-99f0-0af941deb758/%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%AF%94%E8%A1%A8.xlsx)\n\n链接约 1 小时有效，到 2026-10-02 09:57 UTC 过期，过期后需要重新生成。如果链接打不开，我可以改用内嵌文件的方式重新生成。\n\n表格有两列（模型、得分），\"得分\"列已设置条件格式：\n\n| 模型 | 得分 | 显示 |\n|---|---|---|\n| 模型A | 85 | 无底色，因为在 60 到 90 之间 |\n| 模型B | 55 | 绿色，低于 60 |\n| 模型C | 95 | 红色，高于 90 |\n\n我没有打开生成的文件核对实际显示，上表是按规则推算的。绿色和红色是工具固定的，不能自定义。",
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "model": "claude-sonnet-5-5",
+    "costUsd": 0.0731886,
+    "durationMs": 8853,
+    "turns": 5
+  }
+}

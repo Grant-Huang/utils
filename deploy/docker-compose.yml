@@ -35,8 +35,10 @@ services:
     ports: ["80:80", "443:443"]
     environment:
       SITE_ADDRESS: ${PUBLIC_HOST:-localhost}
+      MARKET_ALLOWED_IPS: ${MARKET_ALLOWED_IPS:-private_ranges}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../site/dist:/srv/market:ro        # 集市站点：先运行 python site/build.py 生成
       - caddy-data:/data
     depends_on: [office, webtool]
 

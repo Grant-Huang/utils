@@ -1,0 +1,41 @@
+{
+  "calls": [
+    {
+      "title": "创建工作簿",
+      "tool": "create_workbook",
+      "arguments": {
+        "path": "demo.xlsx",
+        "sheets": [
+          "数据"
+        ]
+      }
+    },
+    {
+      "title": "写入单元格",
+      "tool": "write_range",
+      "arguments": {
+        "path": "demo.xlsx",
+        "sheet": "数据",
+        "start_cell": "A1",
+        "rows": [
+          [
+            "名称",
+            "数量"
+          ],
+          [
+            "螺丝",
+            120
+          ]
+        ]
+      }
+    },
+    {
+      "title": "读取区域",
+      "tool": "read_range",
+      "arguments": {
+        "path": "demo.xlsx",
+        "sheet": "数据"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "calls": [
+    {
+      "title": "直接对 CSV 做聚合",
+      "tool": "execute_query",
+      "arguments": {
+        "sql": "SELECT machine, SUM(count) AS total FROM read_csv('/data/calls.csv') GROUP BY machine ORDER BY machine"
+      }
+    }
+  ]
+}

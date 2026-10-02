@@ -10,5 +10,29 @@
   "keywords": [
     "mcp",
     "docling"
-  ]
+  ],
+  "metadata": {
+    "market": {
+      "type": "mcp",
+      "title": "Docling PDF 解析",
+      "summary": "PDF 结构化解析，含 OCR 与表格结构识别，适合扫描件和复杂版面",
+      "category": "document-reading",
+      "origin": "third-party",
+      "risk": "medium",
+      "riskNote": "转换工具接受 URL 或路径，还带目录扫描工具，必须隔离在无外网、无敏感文件的容器里",
+      "endpoint": "/docling/mcp",
+      "tokenScope": "default",
+      "tags": [
+        "pdf",
+        "ocr",
+        "表格"
+      ],
+      "upstream": {
+        "name": "docling-mcp",
+        "version": "3.2.1",
+        "license": "MIT",
+        "url": "https://github.com/docling-project/docling-mcp"
+      }
+    }
+  }
 }

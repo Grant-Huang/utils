@@ -31,6 +31,17 @@ def test_origin_must_be_allowed_when_present():
     assert c.check(ok)[0] == 200                                         # 无 Origin（非浏览器）放行
 
 
+def test_same_origin_is_allowed_but_cross_site_is_not():
+    c = chk()                                   # 白名单为空
+    ok = {"Authorization": "Bearer tok-a"}
+    same = {**ok, "Origin": "https://mcp.example.com", "Host": "mcp.example.com"}
+    assert c.check(same)[0] == 200                                               # 站点和 MCP 同域
+    assert c.check({**ok, "Origin": "https://mcp.example.com", "X-Forwarded-Host": "mcp.example.com"})[0] == 200
+    assert c.check({**ok, "Origin": "https://evil.example", "Host": "mcp.example.com"})[0] == 403
+    assert c.check({**ok, "Origin": "https://mcp.example.com.evil.example", "Host": "mcp.example.com"})[0] == 403
+    assert c.check({**ok, "Origin": "https://mcp.example.com"})[0] == 403          # 拿不到 Host 就不放行
+
+
 def test_rate_limit_is_per_token_and_per_minute():
     c = chk(limit=2)
     a = {"Authorization": "Bearer tok-a"}

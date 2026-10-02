@@ -16,5 +16,18 @@
   ],
   "dependencies": [
     "mcp-office"
-  ]
+  ],
+  "metadata": {
+    "market": {
+      "type": "skill",
+      "title": "生成 Office 报告",
+      "summary": "教模型怎么组织 Document JSON、调用 render_* 并交付有时效的下载链接",
+      "category": "reporting",
+      "tags": [
+        "docx",
+        "pptx",
+        "xlsx"
+      ]
+    }
+  }
 }

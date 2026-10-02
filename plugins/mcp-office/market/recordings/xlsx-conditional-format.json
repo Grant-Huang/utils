@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "kind": "mcp",
+  "id": "xlsx-conditional-format",
+  "title": "生成带条件格式的 Excel",
+  "description": "得分低于 60 标绿、高于 90 标红；返回下载链接",
+  "recordedAt": "2026-10-02T08:57:35Z",
+  "source": {
+    "plugin": "mcp-office",
+    "server": {
+      "name": "office-mcp",
+      "version": "0.2.0"
+    }
+  },
+  "normalized": [
+    "文本中的 http://localhost:18080 改写为 https://mcp.example.com"
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "tool": "render_xlsx",
+      "arguments": {
+        "document": {
+          "sheets": [
+            {
+              "name": "模型对比",
+              "data": [
+                [
+                  "模型",
+                  "得分"
+                ],
+                [
+                  "A",
+                  85
+                ],
+                [
+                  "B",
+                  55
+                ],
+                [
+                  "C",
+                  95
+                ]
+              ],
+              "condFormat": {
+                "column": 1,
+                "low": 60,
+                "high": 90
+              }
+            }
+          ]
+        },
+        "filename": "demo.xlsx"
+      },
+      "truncated": false
+    },
+    {
+      "type": "tool_result",
+      "isError": false,
+      "durationMs": 21,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"filename\":\"demo.xlsx\",\"bytes\":18945,\"mime\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"url\":\"https://mcp.example.com/office/files/7860abe2-07dc-4235-b85e-5a9c6369de77/demo.xlsx\",\"expires_at\":\"2026-10-02T09:57:35.645Z\",\"ttl_seconds\":3600}"
+        },
+        {
+          "name": "demo.xlsx",
+          "uri": "https://mcp.example.com/office/files/7860abe2-07dc-4235-b85e-5a9c6369de77/demo.xlsx",
+          "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "type": "resource_link"
+        }
+      ],
+      "truncated": false
+    }
+  ],
+  "stats": {
+    "durationMs": 21
+  }
+}

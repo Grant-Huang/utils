@@ -1,0 +1,9 @@
+{
+  "_comment": "baseUrl 为空时，页面里的示例地址使用当前站点的 origin（站点和 MCP 服务在同一个网关域名下）。",
+  "title": "utils 集市",
+  "subtitle": "MCP 与 Skill 集市：连接服务的 MCP，教模型使用它们的 Skill",
+  "baseUrl": "",
+  "exampleBaseUrl": "https://mcp.example.com",
+  "marketplaceName": "utils",
+  "repo": "Grant-Huang/utils"
+}
